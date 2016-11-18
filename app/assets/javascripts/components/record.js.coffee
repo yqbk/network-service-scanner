@@ -2,7 +2,7 @@
   getInitialState: ->
     edit: false
 
-  handleToogle: (e) ->
+  handleToggle: (e) ->
     e.preventDefault()
     @setState edit: !@state.edit
 
