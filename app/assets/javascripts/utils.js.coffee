@@ -1,4 +1,4 @@
 # app/assets/javascripts/utils.js.coffee
 
 @amountFormat = (amount) ->
-  '$' + Number(amount).toLocaleString()
+  Number(amount).toLocaleString() + " zł"
