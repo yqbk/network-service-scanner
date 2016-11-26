@@ -12,6 +12,7 @@
   render: ->
     React.DOM.tr null,
       React.DOM.td null, @props.host.IP
+      React.DOM.td null, @props.host.port
       React.DOM.td null, @props.host.status
       React.DOM.td null,
         React.DOM.a

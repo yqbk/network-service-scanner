@@ -20,14 +20,20 @@ class HostsController < ApplicationController
 
     # test = params[:host][:IP]
 
-    (1..20).each do |ip|
-      host_addr = params[:host][:IP] + ip.to_s
-      puts(host_addr)
-      status = scanner.icmp_scan(host_addr)
-      @host = Host.new(:IP => host_addr, :status => status)
-      @host.save
+    # [6,13,14,18].each do |ip|
+    #   host_addr = params[:host][:IP] + ip.to_s
+    #   puts(host_addr)
+    #   status = scanner.icmp_scan(host_addr)
+    #   @host = Host.new(:IP => host_addr, :status => status)
+    #   @host.save
+    # end
 
-    end
+    host_addr = params[:host][:IP]
+    port_nr = params[:host][:port].to_i
+    status = scanner.tcp_syn_scan(host_addr, port_nr)
+    # ? no port in database?
+    @host = Host.new(:IP => host_addr, :port => port_nr, :status => status)
+    @host.save
 
     render_host()
 
@@ -55,7 +61,7 @@ class HostsController < ApplicationController
   private
 
   def host_params
-    params.require(:host).permit(:IP)
+    params.require(:host).permit(:IP, :port)
   end
 
   def render_host

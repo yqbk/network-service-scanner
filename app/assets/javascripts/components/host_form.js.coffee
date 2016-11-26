@@ -14,6 +14,15 @@
           name: 'IP'
           value: @state.IP
           onChange: @handleChange
+        React.DOM.div
+          className: 'form-group'
+          React.DOM.input
+            type: 'number'
+            className: 'form-control'
+            placeholder: 'port number'
+            name: 'port'
+            value: @state.port
+            onChange: @handleChange
       React.DOM.button
         type: 'submit'
         className: 'btn btn-primary'
@@ -25,7 +34,7 @@
     @setState "#{ name }": e.target.value
 
   valid: ->
-    @state.IP
+    @state.IP && @state.port
 
   handleSubmit: (e) ->
     e.preventDefault()

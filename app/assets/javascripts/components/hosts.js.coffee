@@ -28,6 +28,7 @@
         React.DOM.thead null,
           React.DOM.tr null,
             React.DOM.th null, 'IP'
+            React.DOM.th null, 'port'
             React.DOM.th null, 'status'
             React.DOM.th null, 'Actions'
         React.DOM.tbody null,
