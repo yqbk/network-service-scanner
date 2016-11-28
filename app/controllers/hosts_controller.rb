@@ -14,7 +14,8 @@ class HostsController < ApplicationController
 
   def scann()
 
-    Host.delete_all
+    # Host.delete_all
+
 
     scanner = Scanner.new
 
@@ -55,6 +56,8 @@ class HostsController < ApplicationController
 
   def create
 
+
+    @hosts = Host.all
 
     @host = scann()
 
