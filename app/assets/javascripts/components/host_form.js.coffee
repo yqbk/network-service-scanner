@@ -14,15 +14,35 @@
           name: 'IP'
           value: @state.IP
           onChange: @handleChange
-        React.DOM.div
-          className: 'form-group'
-          React.DOM.input
-            type: 'number'
-            className: 'form-control'
-            placeholder: 'port number'
-            name: 'port'
-            value: @state.port
-            onChange: @handleChange
+      React.DOM.div
+        className: 'form-group'
+        React.DOM.input
+          type: 'number'
+          className: 'form-control'
+          placeholder: 'port number'
+          name: 'port'
+          value: @state.port
+          onChange: @handleChange
+#      React.DOM.div
+#        className: 'form-group'
+#        React.DOM.input
+#          type: 'radio'
+#          className: 'form-control'
+#          placeholder: 'Method'
+#          name: 'method'
+#          value: {'method2'}
+#          onChange: @handleChange
+##          'Scann network'
+#        React.DOM.div
+#          className: 'form-group'
+#          React.DOM.input
+#            type: 'radio'
+#            className: 'form-control'
+#            placeholder: 'Method'
+#            name: 'method2'
+#            value: 'method2'
+#            onChange: @handleChange
+##            'Scann network'
       React.DOM.button
         type: 'submit'
         className: 'btn btn-primary'

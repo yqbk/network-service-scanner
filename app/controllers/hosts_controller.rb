@@ -12,11 +12,11 @@ class HostsController < ApplicationController
     head :no_content
   end
 
-  def create
-
-    scanner = Scanner.new
+  def scann()
 
     Host.delete_all
+
+    scanner = Scanner.new
 
     # test = params[:host][:IP]
 
@@ -31,8 +31,16 @@ class HostsController < ApplicationController
     host_addr = params[:host][:IP]
     port_nr = params[:host][:port].to_i
     status = scanner.tcp_syn_scan(host_addr, port_nr)
-    # ? no port in database?
-    @host = Host.new(:IP => host_addr, :port => port_nr, :status => status)
+
+    Host.new(:IP => host_addr, :port => port_nr, :status => status, :scann_type => 'SYN scann', :scann_time => '1 sekunda')
+
+  end
+
+  def create
+
+
+    @host = scann()
+
     @host.save
 
     render_host()
