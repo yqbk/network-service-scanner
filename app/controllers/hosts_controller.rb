@@ -49,11 +49,7 @@ class HostsController < ApplicationController
       }
     end
 
-    scann_time = Benchmark.realtime {
-      status = scanner.tcp_syn_scan(host_addr, port_nr)
-    }
-
-    Host.new(:IP => host_addr, :port => port_nr, :status => status, :scann_type => 'SYN scann', :scann_time => scann_time.round(5).to_s)
+    Host.new(:IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s)
 
   end
 

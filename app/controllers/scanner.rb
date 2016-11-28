@@ -94,6 +94,51 @@ class Scanner
 
   end
 
+  def tcp_fin_scan(ip, port)
+
+    config = PacketFu::Utils.whoami?()
+    status = false
+
+    tcp_fin_packet = PacketFu::TCPPacket.new(:config => config)
+    tcp_fin_packet.ip_daddr = ip
+    tcp_fin_packet.payload = "TCP fin probe"
+
+    tcp_fin_packet.tcp_flags.fin = 1
+    tcp_fin_packet.tcp_dst = port
+    tcp_fin_packet.tcp_src = 2000
+
+    tcp_fin_packet.recalc
+
+    capture_thread = Thread.new do
+      begin
+        Timeout::timeout(3) {
+          cap = PacketFu::Capture.new(:iface => config[:iface], :start => true) # :promisc => true
+          cap.stream.each do |p|
+            pkt = PacketFu::Packet.parse p
+            next unless pkt.is_ip? or pkt.is_tcp?
+            if pkt.ip_saddr == ip and pkt.ip_saddr == ip and pkt.tcp_dport == tcp_fin_packet.tcp_src and pkt.tcp_flags.rst == 1
+              status = false
+              break
+            end
+          end
+        }
+      rescue Timeout::Error
+        status = true
+      end
+    end
+
+    10.times do
+      tcp_fin_packet.to_w
+    end
+
+    capture_thread.join
+    if status
+      return 'up'
+    else
+      return 'down'
+    end
+  end
+
 
 
 end

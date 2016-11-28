@@ -29,7 +29,7 @@
           type: 'text'
           className: 'form-control'
           placeholder: 'Scann type'
-          name: 'method'
+          name: 'scann_type'
           value: @state.scann_type
           onChange: @handleChange
 #          'Scann network'
