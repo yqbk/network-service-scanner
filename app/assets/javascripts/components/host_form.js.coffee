@@ -23,16 +23,16 @@
           name: 'port'
           value: @state.port
           onChange: @handleChange
-#      React.DOM.div
-#        className: 'form-group'
-#        React.DOM.input
-#          type: 'radio'
-#          className: 'form-control'
-#          placeholder: 'Method'
-#          name: 'method'
-#          value: {'method2'}
-#          onChange: @handleChange
-##          'Scann network'
+      React.DOM.div
+        className: 'form-group'
+        React.DOM.input
+          type: 'text'
+          className: 'form-control'
+          placeholder: 'Scann type'
+          name: 'method'
+          value: @state.scann_type
+          onChange: @handleChange
+#          'Scann network'
 #        React.DOM.div
 #          className: 'form-group'
 #          React.DOM.input

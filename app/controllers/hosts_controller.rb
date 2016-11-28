@@ -30,9 +30,30 @@ class HostsController < ApplicationController
 
     host_addr = params[:host][:IP]
     port_nr = params[:host][:port].to_i
-    status = scanner.tcp_syn_scan(host_addr, port_nr)
+    scann_type = params[:host][:scann_type]
+    status = '?'
+    scann_time = 0
 
-    Host.new(:IP => host_addr, :port => port_nr, :status => status, :scann_type => 'SYN scann', :scann_time => '1 sekunda')
+    if scann_type == 'syn'
+      scann_time = Benchmark.realtime {
+        status = scanner.tcp_syn_scan(host_addr, port_nr)
+      }
+
+    elsif scann_type == 'fin'
+      scann_time = Benchmark.realtime {
+        status = scanner.tcp_fin_scan(host_addr, port_nr)
+      }
+    else
+      scann_time = Benchmark.realtime {
+        status = scanner.icmp_scan(host_addr)
+      }
+    end
+
+    scann_time = Benchmark.realtime {
+      status = scanner.tcp_syn_scan(host_addr, port_nr)
+    }
+
+    Host.new(:IP => host_addr, :port => port_nr, :status => status, :scann_type => 'SYN scann', :scann_time => scann_time.round(5).to_s)
 
   end
 
