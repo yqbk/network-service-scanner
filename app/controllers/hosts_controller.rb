@@ -50,7 +50,7 @@ class HostsController < ApplicationController
     end
 
 
-    if status == "up"
+    if status == "up" || "filtered"
       service = teln.connect(host_addr, port_nr)
     end
 
@@ -60,6 +60,7 @@ class HostsController < ApplicationController
 
   def create
 
+    # Host.delete_all
 
     @hosts = Host.all
 
