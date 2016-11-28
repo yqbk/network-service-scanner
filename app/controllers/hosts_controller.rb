@@ -16,6 +16,7 @@ class HostsController < ApplicationController
 
 
     scanner = Scanner.new
+    teln = Telnet.new
 
     # test = params[:host][:IP]
 
@@ -48,7 +49,12 @@ class HostsController < ApplicationController
       }
     end
 
-    Host.new(:scan_id => @hosts.count,:IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s)
+
+    if status == "up"
+      service = teln.connect(host_addr, port_nr)
+    end
+
+    Host.new(:scan_id => @hosts.count,:IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s, :service => service)
 
   end
 
