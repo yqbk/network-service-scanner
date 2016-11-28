@@ -14,8 +14,6 @@ class HostsController < ApplicationController
 
   def scann()
 
-    # Host.delete_all
-
 
     scanner = Scanner.new
 
@@ -50,7 +48,7 @@ class HostsController < ApplicationController
       }
     end
 
-    Host.new(:IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s)
+    Host.new(:scan_id => @hosts.count,:IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s)
 
   end
 
