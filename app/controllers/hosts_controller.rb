@@ -2,6 +2,18 @@
 
 class HostsController < ApplicationController
 
+
+
+  # todo udp scann
+  # todo OS detection
+  # todo Implement full scann of the network with multiple methods , nmap -sP
+  # todo Navbar in the top of page
+  # todo refresh chartkick on change or add generate chart button
+  # todo hosts map with d3.js
+  # todo refactor scanner to implement inheritance
+
+
+
   def index
     @hosts = Host.all
   end
@@ -29,7 +41,7 @@ class HostsController < ApplicationController
     # end
 
     # host_addr = params[:host][:IP]
-    host_addr = '10.22.111.185'
+    host_addr = '192.168.0.7'
     port_nr = 3000
     # port_nr = params[:host][:port].to_i
     scann_type = params[:host][:scann_type]
@@ -81,7 +93,7 @@ class HostsController < ApplicationController
 
   def create
 
-    # Host.delete_all
+
 
     @hosts = Host.all
 
@@ -91,6 +103,8 @@ class HostsController < ApplicationController
     rescue NoMethodError
       nil
     end
+
+    # Host.delete_all
 
     render_host()
     # redirect_to :back
