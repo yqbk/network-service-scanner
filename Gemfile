@@ -31,6 +31,8 @@ gem 'react-rails', '~> 1.0'
 
 gem 'packetfu'
 
+gem 'net-telnet'
+
 gem 'table_print'
 
 gem 'chartkick'

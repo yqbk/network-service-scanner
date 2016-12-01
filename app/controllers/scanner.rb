@@ -133,5 +133,97 @@ class Scanner
     status
 
     end
+
+
+  def tcp_xmas_scan(ip, port)
+
+    config = PacketFu::Utils.whoami?()
+    status = '?'
+
+    tcp_xmas_packet = PacketFu::TCPPacket.new(:config => config)
+    tcp_xmas_packet.ip_daddr = ip
+    tcp_xmas_packet.payload = "TCP fin probe"
+
+    tcp_xmas_packet.tcp_flags.fin = 1
+    tcp_xmas_packet.tcp_flags.psh = 1
+    tcp_xmas_packet.tcp_flags.urg = 1
+    tcp_xmas_packet.tcp_dst = port
+    tcp_xmas_packet.tcp_src = 2000
+
+    tcp_xmas_packet.recalc
+
+    capture_thread = Thread.new do
+      begin
+        Timeout::timeout(1) {
+          cap = PacketFu::Capture.new(:iface => config[:iface], :start => true) # :promisc => true
+          cap.stream.each do |p|
+            pkt = PacketFu::Packet.parse p
+            next unless pkt.is_ip? or pkt.is_tcp?
+            if pkt.ip_saddr == ip and pkt.ip_saddr == ip and pkt.tcp_dport == tcp_xmas_packet.tcp_src and pkt.tcp_flags.rst == 1
+              status = 'down'
+              break
+            end
+          end
+        }
+      rescue Timeout::Error
+        status = 'up'
+      end
+    end
+
+    10.times do
+      tcp_xmas_packet.to_w
+    end
+
+    capture_thread.join
+
+    status
+
   end
+
+  def tcp_null_scan(ip, port)
+
+    config = PacketFu::Utils.whoami?()
+    status = '?'
+
+    tcp_null_packet = PacketFu::TCPPacket.new(:config => config)
+    tcp_null_packet.ip_daddr = ip
+    tcp_null_packet.payload = "TCP fin probe"
+
+    # explicitly set flags to 0
+
+    tcp_null_packet.tcp_dst = port
+    tcp_null_packet.tcp_src = 2000
+
+    tcp_null_packet.recalc
+
+    capture_thread = Thread.new do
+      begin
+        Timeout::timeout(1) {
+          cap = PacketFu::Capture.new(:iface => config[:iface], :start => true) # :promisc => true
+          cap.stream.each do |p|
+            pkt = PacketFu::Packet.parse p
+            next unless pkt.is_ip? or pkt.is_tcp?
+            if pkt.ip_saddr == ip and pkt.ip_saddr == ip and pkt.tcp_dport == tcp_null_packet.tcp_src and pkt.tcp_flags.rst == 1
+              status = 'down'
+              break
+            end
+          end
+        }
+      rescue Timeout::Error
+        status = 'up'
+      end
+    end
+
+    10.times do
+      tcp_null_packet.to_w
+    end
+
+    capture_thread.join
+
+    status
+
+  end
+
+
+end
 

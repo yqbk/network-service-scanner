@@ -54,7 +54,8 @@
     @setState "#{ name }": e.target.value
 
   valid: ->
-    @state.IP && @state.port
+    @state.scann_type
+#    @state.IP && @state.port
 
   handleSubmit: (e) ->
     e.preventDefault()

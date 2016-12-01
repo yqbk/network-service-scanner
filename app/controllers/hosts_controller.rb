@@ -28,8 +28,10 @@ class HostsController < ApplicationController
     #   @host.save
     # end
 
-    host_addr = params[:host][:IP]
-    port_nr = params[:host][:port].to_i
+    # host_addr = params[:host][:IP]
+    host_addr = '10.22.111.185'
+    port_nr = 3000
+    # port_nr = params[:host][:port].to_i
     scann_type = params[:host][:scann_type]
     status = '?'
     scann_time = 0
@@ -43,10 +45,29 @@ class HostsController < ApplicationController
       scann_time = Benchmark.realtime {
         status = scanner.tcp_fin_scan(host_addr, port_nr)
       }
-    else
+    elsif scann_type == 'xmas'
+      scann_time = Benchmark.realtime {
+        status = scanner.tcp_xmas_scan(host_addr, port_nr)
+      }
+    elsif scann_type == 'null'
+      scann_time = Benchmark.realtime {
+        status = scanner.tcp_null_scan(host_addr, port_nr)
+      }
+    # elsif scann_type == 'udp'
+    #   scann_time = Benchmark.realtime {
+    #     status = scanner.udp_scan(host_addr, port_nr)
+    #   }
+    elsif scann_type == 'icmp'
       scann_time = Benchmark.realtime {
         status = scanner.icmp_scan(host_addr)
       }
+    elsif scann_type == 'clear'
+      Host.delete_all
+    else
+      begin
+        redirect_to hosts_url, alert: 'incorrect type'
+        return
+      end
     end
 
 
@@ -64,11 +85,15 @@ class HostsController < ApplicationController
 
     @hosts = Host.all
 
-    @host = scann()
-
-    @host.save
+    begin
+      @host = scann()
+      @host.save
+    rescue NoMethodError
+      nil
+    end
 
     render_host()
+    # redirect_to :back
 
     #
     # [1..100].each do |ip|

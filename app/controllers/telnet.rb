@@ -20,9 +20,9 @@ class Telnet
       # proxy is Net::Telnet or IO object
       )
 
-      response = host.cmd('lala')
+      response = host.cmd('')
 
-    rescue Net::ReadTimeout, Errno::ECONNREFUSED
+    rescue Net::ReadTimeout, Errno::ECONNREFUSED, Net::OpenTimeout
       service = '-'
     end
 
