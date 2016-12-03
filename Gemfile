@@ -33,6 +33,7 @@ gem 'bootstrap-sass', '~> 3.3.6'
 gem 'react_webpack_rails'
 
 
+
 gem 'packetfu'
 
 gem 'net-telnet'
@@ -63,3 +64,4 @@ group :development do
   gem 'spring'
 end
 
+gem 'rwr-view_helpers', '~> 0.1.1'
