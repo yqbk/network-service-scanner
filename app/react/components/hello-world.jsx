@@ -26,20 +26,22 @@ export default class HelloWorld extends React.Component {
     }
 
 
-    constructor ()
+
+    constructor (props)
     {
-        super()
+        super(props)
         this.handleActive = this.handleActive.bind(this);
         injectTapEventPlugin();
+
     }
+
+
 
     handleActive(tab) {
         alert(`A tab with this route property ${tab.props['data-route']} was activated.`);
     }
-
-
-
     render() {
+
 
         const styles = {
             headline: {
@@ -53,7 +55,7 @@ export default class HelloWorld extends React.Component {
         return (
             <Tabs>
                 <Tab label="Scann" >
-                    <TabOne/>
+                    <TabOne hosts={this.props.data}/>
                 </Tab>
 
                 <Tab label="Single Scann" >
@@ -77,6 +79,8 @@ export default class HelloWorld extends React.Component {
 
 
             </Tabs>
+
+
         );
 
 

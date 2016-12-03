@@ -1,5 +1,9 @@
 class ReactExamplesController < ApplicationController
   def component
-    @name = 'test'
+    @hosts = Host.all
+  end
+
+  def index
+    @hosts = Host.all
   end
 end
