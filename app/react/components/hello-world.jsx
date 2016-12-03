@@ -1,23 +1,83 @@
-
+import React from 'react';
+import {Tabs, Tab} from 'material-ui/Tabs';
 import AppBar from 'material-ui/AppBar';
-import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import Slider from 'material-ui/Slider';
+import baseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
-import React, { PropTypes } from 'react';
+import TabOne from './menu/TabOne'
+
+
+
 
 export default class HelloWorld extends React.Component {
 
-    static propTypes() {
-        return {username: PropTypes.string.isRequired};
+    static childContextTypes =
+    {
+        muiTheme: React.PropTypes.object
     }
 
-    getChildContext() {
-        return { muiTheme: getMuiTheme(baseTheme) };
+    getChildContext()
+    {
+        return {
+            muiTheme: getMuiTheme()
+        }
     }
+
+
+    constructor ()
+    {
+        super()
+        this.handleActive = this.handleActive.bind(this);
+        injectTapEventPlugin();
+    }
+
+    handleActive(tab) {
+        alert(`A tab with this route property ${tab.props['data-route']} was activated.`);
+    }
+
 
 
     render() {
-        return <div>Hello {this.props.username} <AppBar title="Title" /> </div>;
+
+        const styles = {
+            headline: {
+                fontSize: 24,
+                paddingTop: 16,
+                marginBottom: 12,
+                fontWeight: 400,
+            },
+        }
+
+        return (
+            <Tabs>
+                <Tab label="Scann" >
+                    <TabOne/>
+                </Tab>
+
+                <Tab label="Single Scann" >
+                    <div>
+                        <h2>Tab Two</h2>
+                        <p>
+                            This is another example tab.
+                        </p>
+                    </div>
+                </Tab>
+
+                <Tab label="About" >
+                    <div>
+                        <h2>Tab Two</h2>
+                        <p>
+                            This is another example tab.
+                        </p>
+                    </div>
+                </Tab>
+
+
+
+            </Tabs>
+        );
 
 
     }
