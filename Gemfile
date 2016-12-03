@@ -27,7 +27,11 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bootstrap-sass', '~> 3.3.6'
 
 # react
-gem 'react-rails', '~> 1.0'
+# gem 'react-rails', '~> 1.0'
+
+
+gem 'react_webpack_rails'
+
 
 gem 'packetfu'
 
