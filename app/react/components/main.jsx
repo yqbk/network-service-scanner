@@ -8,6 +8,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import TabOne from './menu/TabOne'
 import History from './menu/history'
+import HostForm from './forms/host_form'
 
 export default class Main extends React.Component {
 
@@ -54,6 +55,7 @@ export default class Main extends React.Component {
                         <p>
                             Scann range of adresses or your current network to detect hosts, open ports and services running on them.
                         </p>
+                        <HostForm/>
                     </div>
                 </Tab>
                 <Tab label="Single Scann" >
