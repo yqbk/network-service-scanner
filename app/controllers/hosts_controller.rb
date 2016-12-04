@@ -2,8 +2,6 @@
 
 class HostsController < ApplicationController
 
-
-
   # todo udp scann
   # todo OS detection
   # todo Implement full scann of the network with multiple methods , nmap -sP
@@ -11,6 +9,9 @@ class HostsController < ApplicationController
   # todo refresh chartkick on change or add generate chart button
   # todo hosts map with d3.js
   # todo refactor scanner to implement inheritance
+
+#   <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
+#   <%= line_chart @hosts.group(:scan_id).minimum(:scann_time) %>
 
   def component
     @hosts = Host.all
@@ -28,7 +29,6 @@ class HostsController < ApplicationController
   end
 
   def scann()
-
 
     scanner = Scanner.new
     teln = Telnet.new

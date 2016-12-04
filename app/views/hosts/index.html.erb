@@ -1,9 +1,1 @@
-<%= react_component('HelloWorld', { data: @hosts }) %>
-
-
-
-<%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
-
-
-<%= line_chart @hosts.group(:scan_id).minimum(:scann_time) %>
-
+<%= react_component('Main', { data: @hosts }) %>

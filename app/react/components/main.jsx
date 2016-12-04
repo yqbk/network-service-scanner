@@ -2,21 +2,26 @@ import React from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import AppBar from 'material-ui/AppBar';
 import Slider from 'material-ui/Slider';
-import baseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import TabOne from './menu/TabOne'
-
-
-
+import History from './menu/history'
 
 export default class Main extends React.Component {
+
+    constructor (props)
+    {
+        super(props)
+        this.handleActive = this.handleActive.bind(this);
+        injectTapEventPlugin();
+    }
 
     static childContextTypes =
     {
         muiTheme: React.PropTypes.object
-    }
+    };
 
     getChildContext()
     {
@@ -25,23 +30,12 @@ export default class Main extends React.Component {
         }
     }
 
-
-
-    constructor (props)
+    handleActive(tab)
     {
-        super(props)
-        this.handleActive = this.handleActive.bind(this);
-        injectTapEventPlugin();
-
-    }
-
-
-
-    handleActive(tab) {
         alert(`A tab with this route property ${tab.props['data-route']} was activated.`);
     }
-    render() {
 
+    render() {
 
         const styles = {
             headline: {
@@ -50,40 +44,37 @@ export default class Main extends React.Component {
                 marginBottom: 12,
                 fontWeight: 400,
             },
-        }
+        };
 
         return (
             <Tabs>
                 <Tab label="Scann" >
-                    <TabOne hosts={this.props.data}/>
+                    <div>
+                        <h2>Scann network</h2>
+                        <p>
+                            Scann range of adresses or your current network to detect hosts, open ports and services running on them.
+                        </p>
+                    </div>
                 </Tab>
-
                 <Tab label="Single Scann" >
                     <div>
-                        <h2>Tab Two</h2>
+                        <h2>Scann single host</h2>
                         <p>
-                            This is another example tab.
+                            Choose parameters to perform single scann on host or compare results of different scanning methods.
                         </p>
                     </div>
                 </Tab>
-
-                <Tab label="About" >
+                <Tab label="History" >
                     <div>
-                        <h2>Tab Two</h2>
+                        <h2>History</h2>
                         <p>
-                            This is another example tab.
+                            History of detected hosts
                         </p>
+                        <History hosts={this.props.data}/>
                     </div>
                 </Tab>
-
-
-
             </Tabs>
-
-
         );
-
-
     }
 }
 
