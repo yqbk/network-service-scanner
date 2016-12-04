@@ -12,6 +12,9 @@ class HostsController < ApplicationController
   # todo hosts map with d3.js
   # todo refactor scanner to implement inheritance
 
+  def component
+    @hosts = Host.all
+  end
 
 
   def index
