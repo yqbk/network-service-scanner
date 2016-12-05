@@ -35,13 +35,20 @@ class HostForm extends React.Component
         const { ip, port } = this.state
 
 
-        post('http://localhost:3000', {host: {ip, data}})
+            $.post('http://localhost:3000/hosts', {host: {IP: ip, port}}, function(result){
+                console.log(result)
+            });
 
 
-        $.post '', { host: @state }, (data) =>
-        @props.handleNewHost data
-        @setState @getInitialState()
-        , 'JSON'
+
+
+        // post('http://localhost:3000/hosts', {host: {ip, port}})
+        //     .then((response) => {
+        //         console.log(response)
+        //     })
+        //     .catch((error) => {
+        //         // Who cares?
+        //     })
     }
 
     render() {

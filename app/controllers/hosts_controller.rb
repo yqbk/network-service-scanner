@@ -43,11 +43,12 @@ class HostsController < ApplicationController
     #   @host.save
     # end
 
-    # host_addr = params[:host][:IP]
-    host_addr = '192.168.0.7'
-    port_nr = 3000
-    # port_nr = params[:host][:port].to_i
-    scann_type = params[:host][:scann_type]
+    host_addr = params[:host][:IP]
+    # host_addr = '192.168.0.7'
+    # port_nr = 3000
+    port_nr = params[:host][:port].to_i
+    # scann_type = params[:host][:scann_type]
+    scann_type = ''
     status = '?'
     scann_time = 0
 
@@ -57,6 +58,11 @@ class HostsController < ApplicationController
       }
 
     elsif scann_type == 'fin'
+      scann_time = Benchmark.realtime {
+        status = scanner.tcp_fin_scan(host_addr, port_nr)
+      }
+    #   todo here
+    elsif scann_type == ''
       scann_time = Benchmark.realtime {
         status = scanner.tcp_fin_scan(host_addr, port_nr)
       }
