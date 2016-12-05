@@ -1,5 +1,6 @@
 import React from 'react';
 import Chip from 'material-ui/Chip';
+import { post } from '../utils';
 
 
 
@@ -9,6 +10,7 @@ class HostForm extends React.Component
         super()
 
         this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
 
         this.state = {
             ip: '',
@@ -27,21 +29,25 @@ class HostForm extends React.Component
         })
     }
 
+    handleSubmit(e) {
+        e.preventDefault()
 
-    //
-    // handleSubmit(e) {
-    //     // e.preventDefault()
-    //     // $.post '', { host: @state }, (data) =>
-    //     // @props.handleNewHost data
-    //     // @setState @getInitialState()
-    //     // , 'JSON'
-    // }
+        const { ip, port } = this.state
+
+
+        post('http://localhost:3000', {host: {ip, data}})
+
+
+        $.post '', { host: @state }, (data) =>
+        @props.handleNewHost data
+        @setState @getInitialState()
+        , 'JSON'
+    }
 
     render() {
         const { submitButtonEnabled } = this.state
-        console.log(this.state)
         return (
-            <form className="form-inline">
+            <form className="form-inline" onSubmit={this.handleSubmit}>
                 <div className="form-group">
                     <input type="text"
                            className="form-control"
