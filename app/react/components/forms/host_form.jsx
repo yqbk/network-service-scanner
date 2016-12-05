@@ -1,6 +1,6 @@
 import React from 'react';
-import Chip from 'material-ui/Chip';
 import { post } from '../utils';
+import AutocompleteChips from './autocompleteChips';
 
 
 
@@ -15,14 +15,15 @@ class HostForm extends React.Component
         this.state = {
             ip: '',
             port: '',
+            scann_type: [],
             submitButtonEnabled: false
         }
     }
 
     handleChange (e) {
         const { ip, port } = this.state
-        const name = e.target.name;
-        const value = e.currentTarget.value;
+        const name = e.target ? e.target.name : e.name;
+        const value = e.currentTarget ? e.currentTarget.value : e.value;
         this.setState({
             [name]: value,
             submitButtonEnabled: !!ip && !!port
@@ -52,7 +53,7 @@ class HostForm extends React.Component
     }
 
     render() {
-        const { submitButtonEnabled } = this.state
+        const { submitButtonEnabled, scann_type } = this.state
         return (
             <form className="form-inline" onSubmit={this.handleSubmit}>
                 <div className="form-group">
@@ -71,7 +72,7 @@ class HostForm extends React.Component
                            onChange={this.handleChange}
                     />
                 </div>
-
+                <AutocompleteChips value={scann_type} onChange={this.handleChange} />
                 <button type="submit"
                         className="btn btn-primary"
                         disabled={!submitButtonEnabled}
