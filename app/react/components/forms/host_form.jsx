@@ -9,6 +9,7 @@ class HostForm extends React.Component
     constructor () {
         super()
 
+        this.methods = ['syn', 'fin', 'icmp']
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
 
@@ -54,8 +55,9 @@ class HostForm extends React.Component
 
     render() {
         const { submitButtonEnabled, scann_type } = this.state
+        const dataSource = this.methods.filter(method => !scann_type.includes(method))
         return (
-            <form className="form-inline" onSubmit={this.handleSubmit}>
+            <form className="form-inline" onSubmit={this.handleSubmit} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', height: 50 }}>
                 <div className="form-group">
                     <input type="text"
                            className="form-control"
@@ -64,7 +66,7 @@ class HostForm extends React.Component
                            onChange={this.handleChange}
                     />
                 </div>
-                <div className="form-group">
+                <div className="form-group" style={{ margin: '0 5px' }}>
                     <input type="number"
                            className="form-control"
                            placeholder="port"
@@ -72,10 +74,13 @@ class HostForm extends React.Component
                            onChange={this.handleChange}
                     />
                 </div>
-                <AutocompleteChips value={scann_type} onChange={this.handleChange} />
+                <div style={{ ...(dataSource.length > 0 ? { flex: 1 } : {}) }}>
+                    <AutocompleteChips value={scann_type} onChange={this.handleChange} dataSource={dataSource} methods={this.methods} />
+                </div>
                 <button type="submit"
                         className="btn btn-primary"
                         disabled={!submitButtonEnabled}
+                        style={{ marginLeft: 5, ...(dataSource.length > 0 ? { width: 200 } : { flex: 1 }) }}
                 >
                     Go!
                 </button>

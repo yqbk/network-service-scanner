@@ -7,7 +7,6 @@ class AutocompleteChips extends Component {
     constructor () {
         super()
 
-        this.methods = ['syn', 'fin', 'icmp']
         this.handleNewChips = this.handleNewChips.bind(this)
         this.handleDeleteChip = this.handleDeleteChip.bind(this)
 
@@ -29,8 +28,8 @@ class AutocompleteChips extends Component {
     }
 
     handleNewChips (newChip) {
-        const { value, onChange } = this.props
-        const newValues = this.methods.includes(newChip) ? [...value, newChip] : null
+        const { value, onChange, methods } = this.props
+        const newValues = methods.includes(newChip) ? [...value, newChip] : null
         if (newValues) {
             onChange({
                 name: 'scann_type',
@@ -40,29 +39,46 @@ class AutocompleteChips extends Component {
         this.setState({
             errorText: newValues ? '' : `Method "${newChip}" does not exist`
         })
-        this.refs.autoComplete.setState({ searchText: '' })
+        this.refs.autoComplete && this.refs.autoComplete.setState({ searchText: '' })
     }
 
+
+
     render () {
-        const { value } = this.props
+        const { value, dataSource } = this.props
         const { errorText } = this.state
         return (
-            <div>
-                <div>
+            <div style={{ display: 'flex', alignItems: 'baseline' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline' }}>
                     {
                         value.map((item, chipIndex) => (
-                            <Chip onRequestDelete={() => this.handleDeleteChip(chipIndex)}>{item}</Chip>
+                            <Chip
+                                key={`chip-${chipIndex}`}
+                                style={{ marginRight: 10 }}
+                                onRequestDelete={() => this.handleDeleteChip(chipIndex)}
+                            >
+                                {item}
+                            </Chip>
                         ))
                     }
                 </div>
-                <AutoComplete
-                    ref="autoComplete"
-                    dataSource={this.methods.filter(method => !value.includes(method))}
-                    onNewRequest={this.handleNewChips}
-                    filter={(searchText, key) => searchText === '' || key.indexOf(searchText) !== -1}
-                    errorText={errorText}
-                    openOnFocus
-                />
+                {
+                    dataSource.length > 0
+                        ?
+                            <AutoComplete
+                                ref="autoComplete"
+                                hintText="Choose scann method"
+                                dataSource={dataSource}
+                                onNewRequest={this.handleNewChips}
+                                filter={(searchText, key) => searchText === '' || key.indexOf(searchText) !== -1}
+                                errorText={errorText}
+                                openOnFocus
+                                fullWidth
+                            />
+
+                        : null
+                }
+
             </div>
         )
     }
