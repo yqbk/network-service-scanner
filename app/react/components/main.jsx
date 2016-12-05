@@ -55,7 +55,7 @@ export default class Main extends React.Component {
                         <p>
                             Scann range of adresses or your current network to detect hosts, open ports and services running on them.
                         </p>
-                        <HostForm/>
+                        <HostForm />
                     </div>
                 </Tab>
                 <Tab label="Single Scann" >
