@@ -1,13 +1,11 @@
 import React from 'react';
-import { post } from '../utils';
+// import { post } from '../utils';
 import AutocompleteChips from './autocompleteChips';
-
-
 
 class HostForm extends React.Component
 {
-    constructor () {
-        super()
+    constructor (props) {
+        super(props)
 
         this.methods = ['syn', 'fin', 'icmp']
         this.handleChange = this.handleChange.bind(this)
@@ -22,9 +20,11 @@ class HostForm extends React.Component
     }
 
     handleChange (e) {
+
         const { ip, port } = this.state
         const name = e.target ? e.target.name : e.name;
         const value = e.currentTarget ? e.currentTarget.value : e.value;
+
         this.setState({
             [name]: value,
             submitButtonEnabled: !!ip && !!port
@@ -32,17 +32,24 @@ class HostForm extends React.Component
     }
 
     handleSubmit(e) {
+
         e.preventDefault()
 
-        const { ip, port } = this.state
+        const { ip, port , scann_type} = this.state
+        const { hostTable } = this.props
 
+        scann_type.forEach(
+            (method) => $.post('http://localhost:3000/hosts', {host: {IP: ip, port, scann_type: method}}, function(result){
 
-            $.post('http://localhost:3000/hosts', {host: {IP: ip, port}}, function(result){
-                console.log(result)
-            });
+                hostTable.push(result)
 
-
-
+                // hostTable.forEach(
+                //     (element) => console.log(element.scann_type)
+                // )
+                // // console.log(this.hostTable)
+                // console.log(result)
+            })
+        )
 
         // post('http://localhost:3000/hosts', {host: {ip, port}})
         //     .then((response) => {
@@ -54,8 +61,10 @@ class HostForm extends React.Component
     }
 
     render() {
+
         const { submitButtonEnabled, scann_type } = this.state
         const dataSource = this.methods.filter(method => !scann_type.includes(method))
+
         return (
             <form className="form-inline" onSubmit={this.handleSubmit} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', height: 50 }}>
                 <div className="form-group">
@@ -84,7 +93,6 @@ class HostForm extends React.Component
                 >
                     Go!
                 </button>
-
             </form>
         )
     };

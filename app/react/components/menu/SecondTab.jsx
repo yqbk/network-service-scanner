@@ -1,6 +1,6 @@
 import React from 'react';
 
-const History = (props) => {
+const SecondTab = (props) => {
 
     return (
         <div>
@@ -39,4 +39,4 @@ const History = (props) => {
     )
 };
 
-export default History
+export default SecondTab

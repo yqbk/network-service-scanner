@@ -4,6 +4,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import Chip from 'material-ui/Chip';
 
 class AutocompleteChips extends Component {
+
     constructor () {
         super()
 

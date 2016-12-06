@@ -6,9 +6,9 @@ import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
-import TabOne from './menu/TabOne'
-import History from './menu/history'
-import HostForm from './forms/host_form'
+import FirstTab from './menu/FirstTab'
+import SecondTab from './menu/SecondTab'
+
 
 export default class Main extends React.Component {
 
@@ -48,6 +48,7 @@ export default class Main extends React.Component {
         };
 
         return (
+
             <Tabs>
                 <Tab label="Scann" >
                     <div>
@@ -55,7 +56,8 @@ export default class Main extends React.Component {
                         <p>
                             Scann range of adresses or your current network to detect hosts, open ports and services running on them.
                         </p>
-                        <HostForm />
+                        <FirstTab />
+                        {/*<History hosts={this.props.data}/>*/}
                     </div>
                 </Tab>
                 <Tab label="Single Scann" >
@@ -64,6 +66,7 @@ export default class Main extends React.Component {
                         <p>
                             Choose parameters to perform single scann on host or compare results of different scanning methods.
                         </p>
+                        {/*<SecondTab hosts={this.props.data}/>*/}
                     </div>
                 </Tab>
                 <Tab label="History" >
@@ -72,7 +75,7 @@ export default class Main extends React.Component {
                         <p>
                             History of detected hosts
                         </p>
-                        <History hosts={this.props.data}/>
+                        {/*<History hosts={this.props.data}/>*/}
                     </div>
                 </Tab>
             </Tabs>
