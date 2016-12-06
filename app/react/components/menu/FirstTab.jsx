@@ -11,8 +11,6 @@ class FirstTab extends Component {
 
         this.addHostToTable = this.addHostToTable.bind(this)
 
-
-        //todo refactor 2
         this.state = {
             hostTable: []
         }
@@ -24,18 +22,16 @@ class FirstTab extends Component {
 
         const tablica  = this.state.hostTable
 
-        tablica.push(host)
-
-        this.setState({hostTable: tablica})
-
-        console.log("after push: " + this.state.hostTable)
+        this.setState({
+            hostTable: [...tablica, host]
+        })
 
     }
 
 
     render () {
 
-        console.log("in firstTab: " + this.state.hostTable)
+        console.log("in firstTab: " + this.state)
 
         return (
             <div>

@@ -3,15 +3,8 @@ import React, { Component } from 'react'
 
 class DetectedHosts extends Component {
 
-    constructor (props) {
-        super(props)
-
-        this.state =
-            {
-                hostTable: this.props.hostTable
-            }
-
-
+    constructor () {
+        super()
     }
 
     // componentWillReceiveProps(nextProps) {
@@ -24,7 +17,7 @@ class DetectedHosts extends Component {
 
     render () {
 
-        const hostTable = this.state.hostTable
+        const hostTable = this.props.hostTable
 
         return (
             <div>
@@ -42,8 +35,8 @@ class DetectedHosts extends Component {
                     </thead>
                     <tbody>
 
-                    {hostTable ? hostTable.map(host =>
-                        <tr>
+                    {hostTable ? hostTable.map((host, index) =>
+                        <tr key={`tr-${index}`}>
                             <td>{host.IP}</td>
                             <td>{host.port}</td>
                             <td>{host.status}</td>

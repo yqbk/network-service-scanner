@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import React from 'react';
 // import { post } from '../utils';
 import AutocompleteChips from './autocompleteChips';
@@ -37,15 +39,28 @@ class HostForm extends React.Component
 
         const { ip, port , scann_type} = this.state
 
-        // todo refactor 1
 
-        let inside = (arg) => { this.props.addHostToTable(arg)}
+        // const res = ip.split('.')
+        //     .reduce((accOut, currOut) => {
+        //         const ipSplit = currOut.split('-')
+        //         const result = ipSplit.length === 2 ? _.range(ipSplit[0], ipSplit[1] + 1) : ipSplit
+        //         return [
+        //             ...accOut,
+        //             result
+        //         ]
+        //     })
+        //
+        //
+        //
+        // 1.1.1-3.1 -> [[1], [1], [1, 2, 3], [1]]
 
-        scann_type.forEach(
-            (method) => $.post('http://localhost:3000/hosts', {host: {IP: ip, port, scann_type: method}}, function(result){
-                inside(result)
-            })
-        )
+
+
+        // scann_type.forEach(
+        //     (method) => $.post('http://localhost:3000/hosts', {host: {IP: ip, port, scann_type: method}}, (result) => {
+        //         this.props.addHostToTable(result)
+        //     })
+        // )
 
         // post('http://localhost:3000/hosts', {host: {ip, port}})
         //     .then((response) => {
@@ -67,7 +82,25 @@ class HostForm extends React.Component
                     <input type="text"
                            className="form-control"
                            placeholder="ip address"
-                           name="ip"
+                           name="ip1"
+                           onChange={this.handleChange}
+                    />
+                    <input type="text"
+                           className="form-control"
+                           placeholder="ip address"
+                           name="ip2"
+                           onChange={this.handleChange}
+                    />
+                    <input type="text"
+                           className="form-control"
+                           placeholder="ip address"
+                           name="ip3"
+                           onChange={this.handleChange}
+                    />
+                    <input type="text"
+                           className="form-control"
+                           placeholder="ip address"
+                           name="ip4"
                            onChange={this.handleChange}
                     />
                 </div>
