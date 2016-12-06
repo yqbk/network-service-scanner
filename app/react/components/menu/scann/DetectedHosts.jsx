@@ -6,26 +6,25 @@ class DetectedHosts extends Component {
     constructor (props) {
         super(props)
 
-        this.state = {
-            hostTable: []
-        }
+        this.state =
+            {
+                hostTable: this.props.hostTable
+            }
+
 
     }
 
-    componentWillReceiveProps(nextProps) {
-
-        console.log(" received prop ")
-
-        this.setState({ hostTable: nextProps.hostTable });
-
-    }
+    // componentWillReceiveProps(nextProps) {
+    //
+    //     console.log(" received prop ")
+    //
+    //     this.setState({ hostTable: nextProps.hostTable });
+    //
+    // }
 
     render () {
 
-        const { hostTable } = this.state
-
-
-        console.log("detect hosts : " + hostTable)
+        const hostTable = this.state.hostTable
 
         return (
             <div>
@@ -43,7 +42,7 @@ class DetectedHosts extends Component {
                     </thead>
                     <tbody>
 
-                    {hostTable.map(host =>
+                    {hostTable ? hostTable.map(host =>
                         <tr>
                             <td>{host.IP}</td>
                             <td>{host.port}</td>
@@ -56,7 +55,7 @@ class DetectedHosts extends Component {
                                 <a className="btn btn-danger">delete</a>
                             </td>
                         </tr>
-                    )}
+                    ) : null }
 
                     </tbody>
                 </table>

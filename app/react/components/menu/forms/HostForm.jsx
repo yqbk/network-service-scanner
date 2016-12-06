@@ -4,8 +4,8 @@ import AutocompleteChips from './autocompleteChips';
 
 class HostForm extends React.Component
 {
-    constructor () {
-        super()
+    constructor (props) {
+        super(props)
 
         this.methods = ['syn', 'fin', 'icmp']
         this.handleChange = this.handleChange.bind(this)

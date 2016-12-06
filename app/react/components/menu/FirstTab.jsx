@@ -14,31 +14,33 @@ class FirstTab extends Component {
 
         //todo refactor 2
         this.state = {
-            tablica: []
+            hostTable: []
         }
-
-        this.hostTable = this.state.tablica
 
     }
 
     addHostToTable (host) {
         // this.hostTable.push("llala")
 
-        const { tablica } = this.state
+        const tablica  = this.state.hostTable
 
         tablica.push(host)
+
+        this.setState({hostTable: tablica})
+
+        console.log("after push: " + this.state.hostTable)
 
     }
 
 
     render () {
 
-        console.log("in firstTab: " + this.state)
+        console.log("in firstTab: " + this.state.hostTable)
 
         return (
             <div>
                 <HostForm addHostToTable = {this.addHostToTable} />
-                <DetectedHosts hostTable = {this.hostTable} />
+                <DetectedHosts hostTable = {this.state.hostTable} />
             </div>
         )
     }
