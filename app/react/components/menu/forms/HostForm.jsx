@@ -82,25 +82,7 @@ class HostForm extends React.Component
                     <input type="text"
                            className="form-control"
                            placeholder="ip address"
-                           name="ip1"
-                           onChange={this.handleChange}
-                    />
-                    <input type="text"
-                           className="form-control"
-                           placeholder="ip address"
-                           name="ip2"
-                           onChange={this.handleChange}
-                    />
-                    <input type="text"
-                           className="form-control"
-                           placeholder="ip address"
-                           name="ip3"
-                           onChange={this.handleChange}
-                    />
-                    <input type="text"
-                           className="form-control"
-                           placeholder="ip address"
-                           name="ip4"
+                           name="ip"
                            onChange={this.handleChange}
                     />
                 </div>
