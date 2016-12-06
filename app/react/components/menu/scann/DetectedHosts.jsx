@@ -5,11 +5,27 @@ class DetectedHosts extends Component {
 
     constructor (props) {
         super(props)
+
+        this.state = {
+            hostTable: []
+        }
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        console.log(" received prop ")
+
+        this.setState({ hostTable: nextProps.hostTable });
+
     }
 
     render () {
 
-        const { hostTable } = this.props
+        const { hostTable } = this.state
+
+
+        console.log("detect hosts : " + hostTable)
 
         return (
             <div>

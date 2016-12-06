@@ -4,8 +4,8 @@ import AutocompleteChips from './autocompleteChips';
 
 class HostForm extends React.Component
 {
-    constructor (props) {
-        super(props)
+    constructor () {
+        super()
 
         this.methods = ['syn', 'fin', 'icmp']
         this.handleChange = this.handleChange.bind(this)
@@ -36,18 +36,14 @@ class HostForm extends React.Component
         e.preventDefault()
 
         const { ip, port , scann_type} = this.state
-        const { hostTable } = this.props
+
+        // todo refactor 1
+
+        let inside = (arg) => { this.props.addHostToTable(arg)}
 
         scann_type.forEach(
             (method) => $.post('http://localhost:3000/hosts', {host: {IP: ip, port, scann_type: method}}, function(result){
-
-                hostTable.push(result)
-
-                // hostTable.forEach(
-                //     (element) => console.log(element.scann_type)
-                // )
-                // // console.log(this.hostTable)
-                // console.log(result)
+                inside(result)
             })
         )
 
@@ -92,7 +88,8 @@ class HostForm extends React.Component
                         style={{ marginLeft: 5, ...(dataSource.length > 0 ? { width: 200 } : { flex: 1 }) }}
                 >
                     Go!
-                </button>
+            </button>
+
             </form>
         )
     };
