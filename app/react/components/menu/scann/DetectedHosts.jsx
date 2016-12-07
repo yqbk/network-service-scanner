@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
 class DetectedHosts extends Component {
 
@@ -21,37 +22,38 @@ class DetectedHosts extends Component {
 
         return (
             <div>
-                <table className="table table-bordered">
-                    <thead>
-                    <tr>
-                        <td>IP</td>
-                        <td>Port</td>
-                        <td>Status</td>
-                        <td>Time</td>
-                        <td>Method</td>
-                        <td>Service</td>
-                        <td>Actions</td>
-                    </tr>
-                    </thead>
-                    <tbody>
+                <Table>
+                    <TableHeader displaySelectAll={false}
+                                 adjustForCheckbox={false}>
+                        <TableRow>
+                            <TableHeaderColumn>IP</TableHeaderColumn>
+                            <TableHeaderColumn>Port</TableHeaderColumn>
+                            <TableHeaderColumn>Status</TableHeaderColumn>
+                            <TableHeaderColumn>Time</TableHeaderColumn>
+                            <TableHeaderColumn>Method</TableHeaderColumn>
+                            <TableHeaderColumn>Service</TableHeaderColumn>
+                            <TableHeaderColumn>Actions</TableHeaderColumn>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody displayRowCheckbox={false}>
 
-                    {hostTable ? hostTable.map((host, index) =>
-                        <tr key={`tr-${index}`}>
-                            <td>{host.IP}</td>
-                            <td>{host.port}</td>
-                            <td>{host.status}</td>
-                            <td>{host.scann_time}</td>
-                            <td>{host.scann_type}</td>
-                            <td>{host.service}</td>
-                            <td>
-                                <a className="btn btn-info">Detect service</a>
-                                <a className="btn btn-danger">delete</a>
-                            </td>
-                        </tr>
-                    ) : null }
+                        {hostTable ? hostTable.map((host, index) =>
+                            <TableRow key={`TableRow-${index}`}>
+                                <TableRowColumn>{host.IP}</TableRowColumn>
+                                <TableRowColumn>{host.port}</TableRowColumn>
+                                <TableRowColumn>{host.status}</TableRowColumn>
+                                <TableRowColumn>{host.scann_time}</TableRowColumn>
+                                <TableRowColumn>{host.scann_type}</TableRowColumn>
+                                <TableRowColumn>{host.service}</TableRowColumn>
+                                <TableRowColumn>
+                                    <a className="btn btn-success">Save</a>
+                                    <a className="btn btn-danger" onClick={console.log("lala")}>Delete</a>
+                                </TableRowColumn>
+                            </TableRow>
+                        ) : null }
 
-                    </tbody>
-                </table>
+                    </TableBody>
+                </Table>
             </div>
         )
     }

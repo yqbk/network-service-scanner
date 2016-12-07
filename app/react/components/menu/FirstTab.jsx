@@ -13,6 +13,7 @@ class FirstTab extends Component {
 
         this.addHostToTable = this.addHostToTable.bind(this)
         this.setScannAmount = this.setScannAmount.bind(this)
+        this.deleteHost = this.deleteHost.bind(this)
 
         this.state = {
             hostTable: [],
@@ -42,6 +43,16 @@ class FirstTab extends Component {
         })
     }
 
+    deleteHost(index){
+
+        // this.setState({
+        //     hostTable: this.state.hostTable.filter((_, i) => i !== index)
+        // });
+
+        console.log("delete -> " + index)
+    }
+
+
 
     render () {
 
@@ -50,7 +61,7 @@ class FirstTab extends Component {
                 <HostForm addHostToTable = {this.addHostToTable} setScannAmount = {this.setScannAmount}/>
                 <ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>
                 <hr/>
-                <DetectedHosts hostTable = {this.state.hostTable} />
+                <DetectedHosts hostTable = {this.state.hostTable} deleteHost = {this.deleteHost} />
             </div>
         )
     }
