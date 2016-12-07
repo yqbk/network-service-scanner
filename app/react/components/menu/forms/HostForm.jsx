@@ -77,34 +77,36 @@ class HostForm extends React.Component
             return typeof obj !== typeof [];
         });
 
-        // let flat3 = flat2.map( (val) => {
-        //     console.log(typeof val)
-        //     typeof val !== 'string' ? val.toString() : val
-        //     return val
-        // })
+        let flat3 = flat2.map( (val) => {
 
-        flat2.map(toString)
-
-        let unique = [...new Set(flat2)];
+            typeof val === 'string' ? val : val.toString()
+            return val.toString()
+        })
 
 
 
-        console.log(ports)
-        console.log(flattened)
-        console.log(flat)
-        console.log(flat2)
-        console.log(unique)
+        let unique = [...new Set(flat3)].sort()
 
-        console.log(typeof unique[3])
 
-        // ports.forEach( (singlePort) => {
+
+
+        // console.log(ports)
+        // console.log(flattened)
+        // console.log(flat)
+        // console.log(flat2)
+        // console.log(flat3)
+        // console.log(unique)
         //
-        //         scann_type.forEach(
-        //             (method) => $.post('http://localhost:3000/hosts', {host: {IP: ip, port: singlePort, scann_type: method}}, (result) => {
-        //                 this.props.addHostToTable(result)
-        //             })
-        //         )
-        // })
+        // console.log(typeof unique[3])
+
+        unique.forEach( (singlePort) => {
+
+                scann_type.forEach(
+                    (method) => $.post('http://localhost:3000/hosts', {host: {IP: ip, port: singlePort, scann_type: method}}, (result) => {
+                        this.props.addHostToTable(result)
+                    })
+                )
+        })
 
 
 
