@@ -54,13 +54,22 @@ class HostForm extends React.Component
         //
         // 1.1.1-3.1 -> [[1], [1], [1, 2, 3], [1]]
 
+        const ports = port.split(",")
 
 
-        // scann_type.forEach(
-        //     (method) => $.post('http://localhost:3000/hosts', {host: {IP: ip, port, scann_type: method}}, (result) => {
-        //         this.props.addHostToTable(result)
-        //     })
-        // )
+
+        ports.forEach( (singlePort) => {
+
+                scann_type.forEach(
+                    (method) => $.post('http://localhost:3000/hosts', {host: {IP: ip, port: singlePort, scann_type: method}}, (result) => {
+                        this.props.addHostToTable(result)
+                    })
+                )
+        })
+
+
+
+
 
         // post('http://localhost:3000/hosts', {host: {ip, port}})
         //     .then((response) => {
@@ -87,7 +96,7 @@ class HostForm extends React.Component
                     />
                 </div>
                 <div className="form-group" style={{ margin: '0 5px' }}>
-                    <input type="number"
+                    <input type="text"
                            className="form-control"
                            placeholder="port"
                            name="port"

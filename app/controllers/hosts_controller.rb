@@ -47,6 +47,7 @@ class HostsController < ApplicationController
     # host_addr = '192.168.0.7'
     # port_nr = 3000
     port_nr = params[:host][:port].to_i
+
     scann_type = params[:host][:scann_type]
     status = '?'
     scann_time = 0
