@@ -54,18 +54,57 @@ class HostForm extends React.Component
         //
         // 1.1.1-3.1 -> [[1], [1], [1, 2, 3], [1]]
 
-        const ports = port.split(",")
+        const ports = port.split(",").reduce( (table, val) => {
+
+            const newTable = !val.includes("-") ? [...table , val] : [...table, _.range(val.split("-")[0], val.split("-")[1])]
+            return [...table, newTable]
+
+        }, []);
+
+
+        // const ports2 = port.
+        //     val.split("-")
+        // })
+
+        var flattened = ports.reduce(function(a, b) {
+            return a.concat(b);
+        });
+
+        var flat = [].concat.apply([], ports);
+        var flat2 =  [].concat.apply([], flat);
+
+        flat2 = flat2.filter(function( obj ) {
+            return typeof obj !== typeof [];
+        });
+
+        // let flat3 = flat2.map( (val) => {
+        //     console.log(typeof val)
+        //     typeof val !== 'string' ? val.toString() : val
+        //     return val
+        // })
+
+        flat2.map(toString)
+
+        let unique = [...new Set(flat2)];
 
 
 
-        ports.forEach( (singlePort) => {
+        console.log(ports)
+        console.log(flattened)
+        console.log(flat)
+        console.log(flat2)
+        console.log(unique)
 
-                scann_type.forEach(
-                    (method) => $.post('http://localhost:3000/hosts', {host: {IP: ip, port: singlePort, scann_type: method}}, (result) => {
-                        this.props.addHostToTable(result)
-                    })
-                )
-        })
+        console.log(typeof unique[3])
+
+        // ports.forEach( (singlePort) => {
+        //
+        //         scann_type.forEach(
+        //             (method) => $.post('http://localhost:3000/hosts', {host: {IP: ip, port: singlePort, scann_type: method}}, (result) => {
+        //                 this.props.addHostToTable(result)
+        //             })
+        //         )
+        // })
 
 
 
