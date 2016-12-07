@@ -4,6 +4,7 @@ import React from 'react';
 // import { post } from '../utils';
 import AutocompleteChips from './autocompleteChips';
 
+
 class HostForm extends React.Component
 {
     constructor (props) {
@@ -12,6 +13,7 @@ class HostForm extends React.Component
         this.methods = ['syn', 'fin', 'icmp']
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+
 
         this.state = {
             ip: '',
@@ -88,7 +90,9 @@ class HostForm extends React.Component
         let unique = [...new Set(flat3)].sort()
 
 
+        // console.log(scannAmount)
 
+        this.props.setScannAmount(unique.length)
 
         // console.log(ports)
         // console.log(flattened)
