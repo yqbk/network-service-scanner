@@ -28,7 +28,10 @@
         React.DOM.thead null,
           React.DOM.tr null,
             React.DOM.th null, 'IP'
-            React.DOM.th null, 'status'
+            React.DOM.th null, 'Port'
+            React.DOM.th null, 'Status'
+            React.DOM.th null, 'Time'
+            React.DOM.th null, 'Method'
             React.DOM.th null, 'Actions'
         React.DOM.tbody null,
           for host in @state.hosts
