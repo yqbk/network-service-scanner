@@ -1,6 +1,7 @@
 import _ from 'lodash'
 
 import React from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 // import { post } from '../utils';
 import AutocompleteChips from './autocompleteChips';
 
@@ -56,17 +57,53 @@ class HostForm extends React.Component
         //
         // 1.1.1-3.1 -> [[1], [1], [1, 2, 3], [1]]
 
-        const ports = port.split(",").reduce( (table, val) => {
+
+        let ports = this.formatInput(port)
+
+        let ipsArray = ip.split(".").map(this.formatInput)
+
+        let ips = this.cartesianProductOf.apply(this, ipsArray)
+
+        let ipsString = ips.map( (array) => {  return array.join(".") })
+
+
+        this.props.setScannAmount(ports.length * ipsString.length )
+
+        ipsString.forEach( (singleAddress) => {
+            ports.forEach( (singlePort) => {
+
+                scann_type.forEach(
+                    (method) => $.post('http://localhost:3000/hosts', {host: {IP: singleAddress, port: singlePort, scann_type: method}}, (result) => {
+                        this.props.addHostToTable(result)
+                    })
+                )
+            })
+        })
+
+
+
+
+    }
+
+    cartesianProductOf() {
+    return _.reduce(arguments, function(a, b) {
+        return _.flatten(_.map(a, function(x) {
+            return _.map(b, function(y) {
+                return x.concat([y]);
+            });
+        }), true);
+    }, [ [] ]);
+    }
+
+    formatInput(input){
+
+        const ports = input.split(",").reduce( (table, val) => {
 
             const newTable = !val.includes("-") ? [...table , val] : [...table, _.range(val.split("-")[0], val.split("-")[1])]
             return [...table, newTable]
 
         }, []);
 
-
-        // const ports2 = port.
-        //     val.split("-")
-        // })
 
         var flattened = ports.reduce(function(a, b) {
             return a.concat(b);
@@ -85,44 +122,9 @@ class HostForm extends React.Component
             return val.toString()
         })
 
-
-
         let unique = [...new Set(flat3)].sort()
 
-
-        // console.log(scannAmount)
-
-        this.props.setScannAmount(unique.length)
-
-        // console.log(ports)
-        // console.log(flattened)
-        // console.log(flat)
-        // console.log(flat2)
-        // console.log(flat3)
-        // console.log(unique)
-        //
-        // console.log(typeof unique[3])
-
-        unique.forEach( (singlePort) => {
-
-                scann_type.forEach(
-                    (method) => $.post('http://localhost:3000/hosts', {host: {IP: ip, port: singlePort, scann_type: method}}, (result) => {
-                        this.props.addHostToTable(result)
-                    })
-                )
-        })
-
-
-
-
-
-        // post('http://localhost:3000/hosts', {host: {ip, port}})
-        //     .then((response) => {
-        //         console.log(response)
-        //     })
-        //     .catch((error) => {
-        //         // Who cares?
-        //     })
+        return unique
     }
 
     render() {
@@ -151,13 +153,11 @@ class HostForm extends React.Component
                 <div style={{ ...(dataSource.length > 0 ? { flex: 1 } : {}) }}>
                     <AutocompleteChips value={scann_type} onChange={this.handleChange} dataSource={dataSource} methods={this.methods} />
                 </div>
-                <button type="submit"
-                        className="btn btn-primary"
-                        disabled={!submitButtonEnabled}
-                        style={{ marginLeft: 5, ...(dataSource.length > 0 ? { width: 200 } : { flex: 1 }) }}
-                >
-                    Go!
-            </button>
+                <RaisedButton label="Go!"
+                              primary={true}
+                              type="submit"
+                              disabled={!submitButtonEnabled}
+                              style={{ marginLeft: 5, ...(dataSource.length > 0 ? { width: 200 } : { flex: 1 }) }}/>
 
             </form>
         )
