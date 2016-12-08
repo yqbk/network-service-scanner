@@ -32,6 +32,7 @@
             React.DOM.th null, 'Status'
             React.DOM.th null, 'Time'
             React.DOM.th null, 'Method'
+            React.DOM.th null, 'Service'
             React.DOM.th null, 'Actions'
         React.DOM.tbody null,
           for host in @state.hosts

@@ -25,6 +25,7 @@
       React.DOM.td null, @props.host.status
       React.DOM.td null, @props.host.scann_time
       React.DOM.td null, @props.host.scann_type
+      React.DOM.td null, @props.host.service
       React.DOM.td null,
         React.DOM.a
           className: 'btn btn-info'

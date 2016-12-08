@@ -2,6 +2,18 @@
 
 class HostsController < ApplicationController
 
+
+
+  # todo udp scann
+  # todo OS detection
+  # todo Implement full scann of the network with multiple methods , nmap -sP
+  # todo Navbar in the top of page
+  # todo refresh chartkick on change or add generate chart button
+  # todo hosts map with d3.js
+  # todo refactor scanner to implement inheritance
+
+
+
   def index
     @hosts = Host.all
   end
@@ -16,6 +28,7 @@ class HostsController < ApplicationController
 
 
     scanner = Scanner.new
+    teln = Telnet.new
 
     # test = params[:host][:IP]
 
@@ -27,8 +40,10 @@ class HostsController < ApplicationController
     #   @host.save
     # end
 
-    host_addr = params[:host][:IP]
-    port_nr = params[:host][:port].to_i
+    # host_addr = params[:host][:IP]
+    host_addr = '192.168.0.7'
+    port_nr = 3000
+    # port_nr = params[:host][:port].to_i
     scann_type = params[:host][:scann_type]
     status = '?'
     scann_time = 0
@@ -42,26 +57,57 @@ class HostsController < ApplicationController
       scann_time = Benchmark.realtime {
         status = scanner.tcp_fin_scan(host_addr, port_nr)
       }
-    else
+    elsif scann_type == 'xmas'
+      scann_time = Benchmark.realtime {
+        status = scanner.tcp_xmas_scan(host_addr, port_nr)
+      }
+    elsif scann_type == 'null'
+      scann_time = Benchmark.realtime {
+        status = scanner.tcp_null_scan(host_addr, port_nr)
+      }
+    # elsif scann_type == 'udp'
+    #   scann_time = Benchmark.realtime {
+    #     status = scanner.udp_scan(host_addr, port_nr)
+    #   }
+    elsif scann_type == 'icmp'
       scann_time = Benchmark.realtime {
         status = scanner.icmp_scan(host_addr)
       }
+    elsif scann_type == 'clear'
+      Host.delete_all
+    else
+      begin
+        redirect_to hosts_url, alert: 'incorrect type'
+        return
+      end
     end
 
-    Host.new(:scan_id => @hosts.count,:IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s)
+
+    if status == "up" || "filtered"
+      service = teln.connect(host_addr, port_nr)
+    end
+
+    Host.new(:scan_id => @hosts.count,:IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s, :service => service)
 
   end
 
   def create
 
 
+
     @hosts = Host.all
 
-    @host = scann()
+    begin
+      @host = scann()
+      @host.save
+    rescue NoMethodError
+      nil
+    end
 
-    @host.save
+    # Host.delete_all
 
     render_host()
+    # redirect_to :back
 
     #
     # [1..100].each do |ip|
