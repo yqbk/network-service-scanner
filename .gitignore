@@ -30,3 +30,6 @@ pickle-email-*.html
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
+/node_modules
+/app/assets/javascripts/react_bundle.js
+/app/assets/stylesheets/react_bundle.css

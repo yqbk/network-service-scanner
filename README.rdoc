@@ -1,5 +1,31 @@
 == README
 
+1. Install gem:
+$ bundle install
+
+2. Establish the node packages (may take a few moments)
+$ npm install
+
+3. Make sure you have webpack installed globally:
+$ npm install webpack -g
+
+4. Generate react_bundle.js file for first time:
+$ webpack
+
+5a. keep webpack running in watch mode, it will recompile any changes.
+$ npm start # it's a shorthand for webpack -w --config webpack/dev.config.js
+
+5b. run webpack with hot reload config
+$ npm run start-hot-dev
+
+Porduction:
+Run webpack in production mode before compiling assets using script:
+$ npm run build
+or manually:
+$ webpack -p --config YOUR_CONFIG
+
+
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 

@@ -2,8 +2,6 @@
 
 class HostsController < ApplicationController
 
-
-
   # todo udp scann
   # todo OS detection
   # todo Implement full scann of the network with multiple methods , nmap -sP
@@ -12,6 +10,12 @@ class HostsController < ApplicationController
   # todo hosts map with d3.js
   # todo refactor scanner to implement inheritance
 
+#   <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
+#   <%= line_chart @hosts.group(:scan_id).minimum(:scann_time) %>
+
+  def component
+    @hosts = Host.all
+  end
 
 
   def index
@@ -26,7 +30,6 @@ class HostsController < ApplicationController
 
   def scann()
 
-
     scanner = Scanner.new
     teln = Telnet.new
 
@@ -40,10 +43,10 @@ class HostsController < ApplicationController
     #   @host.save
     # end
 
-    # host_addr = params[:host][:IP]
-    host_addr = '192.168.0.7'
-    port_nr = 3000
-    # port_nr = params[:host][:port].to_i
+    host_addr = params[:host][:IP]
+    # host_addr = '192.168.0.7'
+    # port_nr = 3000
+    port_nr = params[:host][:port].to_i
     scann_type = params[:host][:scann_type]
     status = '?'
     scann_time = 0
