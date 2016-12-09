@@ -48,9 +48,8 @@ class DetectedHosts extends Component {
 
     render () {
 
-        const hostTable = this.props.hostTable
 
-        this.filterTable(hostTable)
+        const hostTable = this.filterTable( this.props.hostTable)
 
 
         return (
