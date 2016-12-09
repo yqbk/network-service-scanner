@@ -8,6 +8,8 @@ import ProgressBar from './forms/progressBar'
 
 import Graph from '../libs/index'
 
+import MyMuiDataTable from './forms/MuiDataTable'
+
 
 
 
@@ -61,32 +63,38 @@ class FirstTab extends Component {
 
     render () {
 
+        // todo delete button
+        // todo select from table to save, delete
+        // todo show/hide disabled/filtered
 
-        const hostNodes = this.state.hostTable.map( (host, index) => {
-            return {id: index, label: host.IP}
-            })
+        // reduce function here
 
-        const hostEdges = this.state.hostTable.map( (host, index) => {
-            return index !== 0 ? {from: 0, to: index} : {}
-        })
-
-
-
-        console.log(hostNodes)
-
-
-        var data = {
-            nodes: hostNodes,
-            edges: hostEdges
-        };
+        // const hostNodes = this.state.hostTable.map( (host, index) => {
+        //     return {id: index, label: host.IP}
+        //     })
+        //
+        // const hostEdges = this.state.hostTable.map( (host, index) => {
+        //     return index !== 0 ? {from: 0, to: index} : {}
+        // })
+        //
+        //
+        //
+        // console.log(hostNodes)
+        //
+        //
+        // var data = {
+        //     nodes: hostNodes,
+        //     edges: hostEdges
+        // };
 
 
         return (
             <div>
                 <HostForm addHostToTable = {this.addHostToTable} setScannAmount = {this.setScannAmount}/>
-                <ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>
-                <Graph graph={data}/>
+                {/*<ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>*/}
+                {/*<Graph graph={data}/>*/}
                 <hr/>
+                {/*<MyMuiDataTable hostTable = {this.state.hostTable}/>*/}
                 <DetectedHosts hostTable = {this.state.hostTable} deleteHost = {this.deleteHost} />
             </div>
         )

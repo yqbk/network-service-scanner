@@ -6,27 +6,59 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import FlatButton from 'material-ui/FlatButton';
 
+import FilterToogle from '../forms/FilterToogle'
+
 
 class DetectedHosts extends Component {
 
     constructor () {
         super()
+
+        this.state = {
+            filterDown: false,
+            filterFiltered: false
+        }
+
+        this.filterDownHosts = this.filterDownHosts.bind(this)
+        this.filterFilteredHosts = this.filterFilteredHosts.bind(this)
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //
-    //     console.log(" received prop ")
-    //
-    //     this.setState({ hostTable: nextProps.hostTable });
-    //
-    // }
+    filterDownHosts (){
+        this.setState({filterDown: !this.state.filterDown})
+    }
+
+    filterFilteredHosts (){
+        this.setState({filterFiltered: !this.state.filterFiltered})
+    }
+
+    filterTable(table)
+    {
+        const filtered = table.reduce( (newTable, element) => {
+
+            const reducedDown =  (element.status === 'up' || element.status === 'filtered' ) ? [...newTable, element] : (this.state.filterDown === (element.status === 'down')) ? newTable : [...newTable, element]
+
+            return reducedDown.reduce( (newTable, element) => {
+                return  (element.status === 'up' || element.status === 'down' ) ? [...newTable, element] : (this.state.filterFiltered === (element.status === 'filtered')) ? newTable : [...newTable, element]
+            }, [])
+
+        }, [])
+
+        return filtered
+    }
 
     render () {
 
         const hostTable = this.props.hostTable
 
+        this.filterTable(hostTable)
+
+
         return (
             <div>
+
+                <FilterToogle filterDownHosts={this.filterDownHosts} filterFilteredHosts={this.filterFilteredHosts}/>
+
+
                 <Table>
                     <TableHeader displaySelectAll={false}
                                  adjustForCheckbox={false}>
