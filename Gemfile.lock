@@ -79,6 +79,7 @@ GEM
     mini_portile2 (2.1.0)
     minitest (5.9.1)
     multi_json (1.12.1)
+    net-ping (2.0.1)
     net-telnet (0.1.1)
     network_interface (0.0.1)
     nokogiri (1.6.8.1)
@@ -169,6 +170,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   jbuilder (~> 2.0)
   jquery-rails
+  net-ping
   net-telnet
   packetfu
   rails (= 4.2.6)

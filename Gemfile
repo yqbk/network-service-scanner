@@ -32,11 +32,11 @@ gem 'bootstrap-sass', '~> 3.3.6'
 
 gem 'react_webpack_rails'
 
-
-
 gem 'packetfu'
 
 gem 'net-telnet'
+
+gem 'net-ping'
 
 gem 'table_print'
 

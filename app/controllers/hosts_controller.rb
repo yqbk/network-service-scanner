@@ -1,4 +1,5 @@
-require 'scanner'
+# require 'scanner'
+# require '../../app/controllers/network/fast_scann'
 
 class HostsController < ApplicationController
 
@@ -46,6 +47,9 @@ class HostsController < ApplicationController
 
     host_addr = params[:host][:IP]
     port_nr = params[:host][:port].to_i
+
+    fast_scanner = FastScann.new
+    fast_scanner.performFastScann(host_addr)
 
     scann_type = params[:host][:scann_type]
     status = '?'
