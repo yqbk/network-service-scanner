@@ -2,228 +2,259 @@ require 'packetfu'
 
 class Scanner
 
-  def icmp_scan(ip)
+  private
+  @ip
+  @dst
+  @src
+  @timeout_value
+  @tries
+  @config
 
-    config = PacketFu::Utils.whoami?()
-    status = '?'
+  def initialize(ip, dst, src, timeout_value, tries, sleep_time)
 
-    # create icmp packet
-    icmp_packet = PacketFu::ICMPPacket.new(:config => config)
-    icmp_packet.ip_daddr = ip
-    icmp_packet.payload = "ICPM probe"
+    @ip = ip
+    @dst = dst
+    @src = src
+    @timeout_value = timeout_value
+    @tries = tries
+    @sleep_time = sleep_time
+    @config = PacketFu::Utils.whoami?()
 
-    icmp_packet.icmp_type = 8 # echo
-
-    icmp_packet.recalc
-
-    capture_thread = Thread.new do
-      begin
-        Timeout::timeout(1) {
-          cap = PacketFu::Capture.new(:iface => config[:iface], :start => true)
-          cap.stream.each do |p|
-            pkt = PacketFu::Packet.parse p
-            next unless pkt.is_icmp?
-            if pkt.ip_saddr == ip and pkt.icmp_type == 0 # echo reply form destintation host
-              status = 'up'
-              break
-            end
-          end
-        }
-      rescue Timeout::Error
-        status = 'down'
-      end
-    end
-
-    10.times do
-      icmp_packet.to_w
-    end
-
-    capture_thread.join
-    status
-
+    @prepared_packet = prepare
   end
 
-  def tcp_syn_scan(ip, port)
+  def prepare
 
-    config = PacketFu::Utils.whoami?()
-    status = '?'
+    packet = PacketFu::TCPPacket.new(:config => @config)
+    packet.ip_daddr = @ip
+    packet.tcp_dst = @dst
+    packet.tcp_src = @src
 
-    tcp_syn_packet = PacketFu::TCPPacket.new(:config => config)
-    tcp_syn_packet.ip_daddr = ip
-    tcp_syn_packet.payload = "TCP ack probe"
+    additional_config(packet)
 
-    tcp_syn_packet.tcp_flags.syn = 1
-    tcp_syn_packet.tcp_dst = port
-    tcp_syn_packet.tcp_src = 2000
+    packet.recalc
 
-    tcp_syn_packet.recalc
+    packet
+  end
+
+  def additional_config(packet)
+    # packet.payload = "TCP sny probe"   it oculd be error?
+    packet.tcp_flags.syn = 1
+    packet
+  end
+
+  def check_packet_type(pkt)
+    pkt.is_tcp?
+  end
+
+  def check_if_icmp(pkt)
+    pkt.is_icmp?
+  end
+
+  def check_packet_flags(pkt)
+    pkt.ip_saddr == @ip and pkt.tcp_dst == @prepared_packet.tcp_src and pkt.tcp_src == @dst and pkt.tcp_flags.syn == 1
+  end
+
+  def check_tcp_rst(pkt)
+    pkt.ip_saddr == @ip and pkt.tcp_dst == @prepared_packet.tcp_src and pkt.tcp_src == @dst and pkt.tcp_flags.rst == 1
+  end
+
+  def check_icmp(pkt)
+    pkt.ip_saddr == @ip and pkt.icmp_type == 3 and (pkt.icmp_code == 0 or 1 or 2 or 3 or 9 or 10 or 13)
+  end
+
+
+  def on_icmp_check_success
+    puts "#{@ip} is fitered (icmp received) #{@dst}"
+  end
+
+  def on_timeout
+    puts "#{@ip} is filtered #{@dst}"
+  end
+
+  def is_successful
+    puts "#{@ip} is up #{@dst}"
+  end
+
+  def is_not_successful
+    puts "#{@ip} is down #{@dst}"
+  end
+
+  def is_filtered
+    puts "#{@ip} is filtered #{@dst}"
+  end
+
+  public
+
+  def set_dst_port(port)
+    @dst = port
+    @prepared_packet = prepare
+  end
+
+  def scann
 
     capture_thread = Thread.new do
       begin
-        Timeout::timeout(4) {
-          cap = PacketFu::Capture.new(:iface => config[:iface], :start => true, :promisc => true) #promisc?
+        Timeout::timeout(@timeout_value) {
+          cap = PacketFu::Capture.new(:iface => @config[:iface], :start => true)
           cap.stream.each do |p|
             pkt = PacketFu::Packet.parse p
-            next unless pkt.is_tcp?
-            if pkt.ip_saddr == ip and pkt.ip_saddr == ip and pkt.tcp_dport ==  tcp_syn_packet.tcp_src
-              if pkt.tcp_flags.syn == 1 and pkt.tcp_flags.ack == 1
-                status = 'up'
+            if check_packet_type(pkt)
+              if check_packet_flags(pkt)    #fails if first fials or check second condition?
+                is_successful
                 break
-              elsif pkt.tcp_flags.rst == 1
-                status = 'down'
+              elsif check_tcp_rst(pkt)
+                is_not_successful
                 break
               end
-            end
-          end
-        }
-      rescue Timeout::Error
-        status = 'filtered'
-      end
-    end
-
-    10.times do
-      tcp_syn_packet.to_w
-    end
-
-    capture_thread.join
-
-   status
-
-  end
-
-  def tcp_fin_scan(ip, port)
-
-    config = PacketFu::Utils.whoami?()
-    status = '?'
-
-    tcp_fin_packet = PacketFu::TCPPacket.new(:config => config)
-    tcp_fin_packet.ip_daddr = ip
-    tcp_fin_packet.payload = "TCP fin probe"
-
-    tcp_fin_packet.tcp_flags.fin = 1
-    tcp_fin_packet.tcp_dst = port
-    tcp_fin_packet.tcp_src = 2000
-
-    tcp_fin_packet.recalc
-
-    capture_thread = Thread.new do
-      begin
-        Timeout::timeout(1) {
-          cap = PacketFu::Capture.new(:iface => config[:iface], :start => true) # :promisc => true
-          cap.stream.each do |p|
-            pkt = PacketFu::Packet.parse p
-            next unless pkt.is_ip? or pkt.is_tcp?
-            if pkt.ip_saddr == ip and pkt.ip_saddr == ip and pkt.tcp_dport == tcp_fin_packet.tcp_src and pkt.tcp_flags.rst == 1
-              status = 'down'
+            elsif check_if_icmp(pkt) and check_icmp(pkt)
+              on_icmp_check_success
               break
+            else
+              next
             end
           end
         }
       rescue Timeout::Error
-        status = 'up'
+        on_timeout
       end
     end
-
-    10.times do
-      tcp_fin_packet.to_w
+    @tries.times do
+      @prepared_packet.to_w
     end
-
     capture_thread.join
-
-    status
-
-    end
-
-
-  def tcp_xmas_scan(ip, port)
-
-    config = PacketFu::Utils.whoami?()
-    status = '?'
-
-    tcp_xmas_packet = PacketFu::TCPPacket.new(:config => config)
-    tcp_xmas_packet.ip_daddr = ip
-    tcp_xmas_packet.payload = "TCP fin probe"
-
-    tcp_xmas_packet.tcp_flags.fin = 1
-    tcp_xmas_packet.tcp_flags.psh = 1
-    tcp_xmas_packet.tcp_flags.urg = 1
-    tcp_xmas_packet.tcp_dst = port
-    tcp_xmas_packet.tcp_src = 2000
-
-    tcp_xmas_packet.recalc
-
-    capture_thread = Thread.new do
-      begin
-        Timeout::timeout(1) {
-          cap = PacketFu::Capture.new(:iface => config[:iface], :start => true) # :promisc => true
-          cap.stream.each do |p|
-            pkt = PacketFu::Packet.parse p
-            next unless pkt.is_ip? or pkt.is_tcp?
-            if pkt.ip_saddr == ip and pkt.ip_saddr == ip and pkt.tcp_dport == tcp_xmas_packet.tcp_src and pkt.tcp_flags.rst == 1
-              status = 'down'
-              break
-            end
-          end
-        }
-      rescue Timeout::Error
-        status = 'up'
-      end
-    end
-
-    10.times do
-      tcp_xmas_packet.to_w
-    end
-
-    capture_thread.join
-
-    status
-
   end
-
-  def tcp_null_scan(ip, port)
-
-    config = PacketFu::Utils.whoami?()
-    status = '?'
-
-    tcp_null_packet = PacketFu::TCPPacket.new(:config => config)
-    tcp_null_packet.ip_daddr = ip
-    tcp_null_packet.payload = "TCP fin probe"
-
-    # explicitly set flags to 0
-
-    tcp_null_packet.tcp_dst = port
-    tcp_null_packet.tcp_src = 2000
-
-    tcp_null_packet.recalc
-
-    capture_thread = Thread.new do
-      begin
-        Timeout::timeout(1) {
-          cap = PacketFu::Capture.new(:iface => config[:iface], :start => true) # :promisc => true
-          cap.stream.each do |p|
-            pkt = PacketFu::Packet.parse p
-            next unless pkt.is_ip? or pkt.is_tcp?
-            if pkt.ip_saddr == ip and pkt.ip_saddr == ip and pkt.tcp_dport == tcp_null_packet.tcp_src and pkt.tcp_flags.rst == 1
-              status = 'down'
-              break
-            end
-          end
-        }
-      rescue Timeout::Error
-        status = 'up'
-      end
-    end
-
-    10.times do
-      tcp_null_packet.to_w
-    end
-
-    capture_thread.join
-
-    status
-
-  end
-
 
 end
+
+class FIN_scanner < Scanner
+
+  def additional_config(packet)
+    # packet.payload = "TCP sny probe"
+    packet.tcp_flags.fin = 1
+    packet
+  end
+
+  def check_packet_flags(pkt)
+    pkt.ip_saddr == @ip and pkt.tcp_dst == @prepared_packet.tcp_src and pkt.tcp_src == @dst and pkt.tcp_flags.rst == 1
+  end
+
+  # when responded with rst port is down
+  def is_successful
+    puts "#{@ip} is down"
+  end
+
+  def on_timeout
+    puts "#{@ip} is up"
+  end
+
+end
+
+class SYN_scanner < Scanner
+
+end
+
+class ACK_scanner < Scanner
+
+  def additional_config(packet)
+    # packet.payload = "TCP sny probe"
+    packet.tcp_flags.ack = 1
+    packet
+  end
+
+  def check_packet_flags(pkt)
+    pkt.ip_saddr == @ip and pkt.tcp_dst == @prepared_packet.tcp_src and pkt.tcp_src == @dst and pkt.tcp_flags.rst == 1
+  end
+
+  # when responded with rst port is down
+  def is_successful
+    puts "#{@ip} is unfiltered"
+  end
+
+  def on_timeout
+    puts "#{@ip} is filtered"
+  end
+
+  def on_icmp_check_success
+    puts "#{@ip} is filtered"
+  end
+
+end
+
+class UDP_scanner < Scanner
+
+  def prepare
+
+    packet = PacketFu::UDPPacket.new(:config => @config)
+    packet.ip_daddr = @ip
+    packet.udp_dst = @dst
+    packet.udp_src = @src
+
+    packet.recalc
+
+    packet
+  end
+
+  def check_packet_type(pkt)
+    pkt.is_udp? and pkt.ip_saddr == @ip
+  end
+
+  def check_if_icmp(pkt)
+    pkt.is_icmp?
+  end
+
+  def on_timeout
+    puts "#{@ip} is open|filtered #{@dst}"
+  end
+
+  def is_successful
+    puts "#{@ip} is up #{@dst}"
+  end
+
+  def is_not_successful
+    puts "#{@ip} is down #{@dst}"
+  end
+
+  public
+
+  def scann
+
+    capture_thread = Thread.new do
+      begin
+        Timeout::timeout(@timeout_value) {
+          cap = PacketFu::Capture.new(:iface => @config[:iface], :start => true)
+          cap.stream.each do |p|
+            pkt = PacketFu::Packet.parse p
+            # puts("czujka -> " + @dst.to_s)
+            if check_packet_type(pkt)
+              is_successful
+              break
+            elsif check_if_icmp(pkt)
+              # puts (" dostałem icmp: " + pkt.icmp_type.to_s + " - " + pkt.icmp_code.to_s)
+              if pkt.icmp_type == 3 and pkt.icmp_code == 3
+                is_not_successful
+              elsif pkt.icmp_type == 3 and (pkt.icmp_code == 0 or 1 or 2 or 9 or 10 or 13)
+                is_filtered
+              end
+              break
+            else
+              next
+            end
+          end
+        }
+      rescue Timeout::Error
+        on_timeout
+      end
+    end
+    @tries.times do
+      @prepared_packet.to_w
+      sleep @sleep_time
+    end
+    capture_thread.join
+  end
+
+end
+
+
+
 

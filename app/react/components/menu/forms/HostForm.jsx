@@ -1,10 +1,7 @@
 import _ from 'lodash'
-
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-// import { post } from '../utils';
 import AutocompleteChips from './autocompleteChips';
-
 
 class HostForm extends React.Component
 {
@@ -14,7 +11,6 @@ class HostForm extends React.Component
         this.methods = ['syn', 'fin', 'icmp']
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
-
 
         this.state = {
             ip: '',
@@ -42,22 +38,6 @@ class HostForm extends React.Component
 
         const { ip, port , scann_type} = this.state
 
-
-        // const res = ip.split('.')
-        //     .reduce((accOut, currOut) => {
-        //         const ipSplit = currOut.split('-')
-        //         const result = ipSplit.length === 2 ? _.range(ipSplit[0], ipSplit[1] + 1) : ipSplit
-        //         return [
-        //             ...accOut,
-        //             result
-        //         ]
-        //     })
-        //
-        //
-        //
-        // 1.1.1-3.1 -> [[1], [1], [1, 2, 3], [1]]
-
-
         let ports = this.formatInput(port)
 
         let ipsArray = ip.split(".").map(this.formatInput)
@@ -66,12 +46,10 @@ class HostForm extends React.Component
 
         let ipsString = ips.map( (array) => {  return array.join(".") })
 
-
         this.props.setScannAmount(ports.length * ipsString.length )
 
         ipsString.forEach( (singleAddress) => {
             ports.forEach( (singlePort) => {
-
                 scann_type.forEach(
                     (method) => $.post('http://localhost:3000/hosts', {host: {IP: singleAddress, port: singlePort, scann_type: method}}, (result) => {
                         this.props.addHostToTable(result)
@@ -79,29 +57,23 @@ class HostForm extends React.Component
                 )
             })
         })
-
-
-
-
     }
 
     cartesianProductOf() {
-    return _.reduce(arguments, function(a, b) {
-        return _.flatten(_.map(a, function(x) {
-            return _.map(b, function(y) {
-                return x.concat([y]);
-            });
-        }), true);
-    }, [ [] ]);
+        return _.reduce(arguments, function(a, b) {
+            return _.flatten(_.map(a, function(x) {
+                return _.map(b, function(y) {
+                    return x.concat([y]);
+                });
+            }), true);
+        }, [ [] ]);
     }
 
     formatInput(input){
 
         const ports = input.split(",").reduce( (table, val) => {
-
             const newTable = !val.includes("-") ? [...table , val] : [...table, _.range(val.split("-")[0], val.split("-")[1])]
             return [...table, newTable]
-
         }, []);
 
 
@@ -117,7 +89,6 @@ class HostForm extends React.Component
         });
 
         let flat3 = flat2.map( (val) => {
-
             typeof val === 'string' ? val : val.toString()
             return val.toString()
         })
@@ -165,6 +136,3 @@ class HostForm extends React.Component
 };
 
 export default HostForm
-
-
-

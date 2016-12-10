@@ -13,6 +13,30 @@ class HostsController < ApplicationController
 #   <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
 #   <%= line_chart @hosts.group(:scan_id).minimum(:scann_time) %>
 
+  def config
+    # udp scann params
+    ip = "192.168.0.10"
+    dst = 53
+    src = 1998
+    timeout_value = 22
+    tries = 4
+    sleep_time = 5
+
+    scanner = UDP_scanner.new(ip, dst, src, timeout_value, tries, sleep_time)
+
+# [1, 22, 139, 445].each do |port|
+#   scanner.set_dst_port(port)
+#   scanner.scann
+# end
+
+
+    [22, 53, 68, 137, 631].each do |port|
+      scanner.set_dst_port(port)
+      scanner.scann
+    end
+
+  end
+
   def component
     @hosts = Host.all
   end
