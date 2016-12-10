@@ -19,6 +19,7 @@ class Scanner
     @tries = tries
     @sleep_time = sleep_time
     @config = PacketFu::Utils.whoami?()
+    @status = ""
 
     @prepared_packet = prepare
   end
@@ -66,22 +67,31 @@ class Scanner
 
   def on_icmp_check_success
     puts "#{@ip} is fitered (icmp received) #{@dst}"
+    set_status("filtered")
   end
 
   def on_timeout
     puts "#{@ip} is filtered #{@dst}"
+    set_status("filtered")
   end
 
   def is_successful
     puts "#{@ip} is up #{@dst}"
+    set_status("up")
   end
 
   def is_not_successful
     puts "#{@ip} is down #{@dst}"
+    set_status("down")
   end
 
   def is_filtered
     puts "#{@ip} is filtered #{@dst}"
+    set_status("filtered")
+  end
+
+  def set_status(val)
+    @status = val
   end
 
   public
@@ -100,7 +110,7 @@ class Scanner
           cap.stream.each do |p|
             pkt = PacketFu::Packet.parse p
             if check_packet_type(pkt)
-              if check_packet_flags(pkt)    #fails if first fials or check second condition?
+              if check_packet_flags(pkt)    #fails if first is false or check second condition?
                 is_successful
                 break
               elsif check_tcp_rst(pkt)
@@ -123,6 +133,7 @@ class Scanner
       @prepared_packet.to_w
     end
     capture_thread.join
+    return @status
   end
 
 end
@@ -142,10 +153,12 @@ class FIN_scanner < Scanner
   # when responded with rst port is down
   def is_successful
     puts "#{@ip} is down"
+    set_status("down")
   end
 
   def on_timeout
     puts "#{@ip} is up"
+    set_status("up")
   end
 
 end
@@ -169,14 +182,17 @@ class ACK_scanner < Scanner
   # when responded with rst port is down
   def is_successful
     puts "#{@ip} is unfiltered"
+    set_status("unfiltered")
   end
 
   def on_timeout
     puts "#{@ip} is filtered"
+    set_status("filtered")
   end
 
   def on_icmp_check_success
     puts "#{@ip} is filtered"
+    set_status("filtered")
   end
 
 end
@@ -205,14 +221,17 @@ class UDP_scanner < Scanner
 
   def on_timeout
     puts "#{@ip} is open|filtered #{@dst}"
+    set_status("open or filtered")
   end
 
   def is_successful
     puts "#{@ip} is up #{@dst}"
+    set_status("up")
   end
 
   def is_not_successful
     puts "#{@ip} is down #{@dst}"
+    set_status("down")
   end
 
   public
@@ -251,6 +270,7 @@ class UDP_scanner < Scanner
       sleep @sleep_time
     end
     capture_thread.join
+    return @status
   end
 
 end

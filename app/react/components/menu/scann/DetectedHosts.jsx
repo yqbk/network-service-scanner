@@ -31,6 +31,8 @@ class DetectedHosts extends Component {
         this.setState({filterFiltered: !this.state.filterFiltered})
     }
 
+
+    // todo unfiltered and others
     filterTable(table)
     {
         const filtered = table.reduce( (newTable, element) => {

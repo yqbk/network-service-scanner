@@ -80,7 +80,7 @@ class FirstTab extends Component {
                 <HostForm addHostToTable = {this.addHostToTable} setScannAmount = {this.setScannAmount}/>
                 <ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>
                 {/*<Graph graph={data}/>*/}
-                <LineChart data={{"2013-02-10 00:00:00 -0800": 11, "2013-02-11 00:00:00 -0800": 6}} />
+                {/*<LineChart data={{"2013-02-10 00:00:00 -0800": 11, "2013-02-11 00:00:00 -0800": 6}} />*/}
                 <hr/>
                 {/*<MyMuiDataTable hostTable = {this.state.hostTable}/>*/}
                 <DetectedHosts hostTable = {this.state.hostTable} deleteHost = {this.deleteHost} />

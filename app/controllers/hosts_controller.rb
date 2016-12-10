@@ -1,4 +1,4 @@
-# require Scanner
+require 'scanner'
 
 class HostsController < ApplicationController
 
@@ -13,29 +13,6 @@ class HostsController < ApplicationController
 #   <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
 #   <%= line_chart @hosts.group(:scan_id).minimum(:scann_time) %>
 
-  def config
-    # udp scann params
-    ip = "192.168.0.10"
-    dst = 53
-    src = 1998
-    timeout_value = 22
-    tries = 4
-    sleep_time = 5
-
-    scanner = UDP_scanner.new(ip, dst, src, timeout_value, tries, sleep_time)
-
-# [1, 22, 139, 445].each do |port|
-#   scanner.set_dst_port(port)
-#   scanner.scann
-# end
-
-
-    [22, 53, 68, 137, 631].each do |port|
-      scanner.set_dst_port(port)
-      scanner.scann
-    end
-
-  end
 
   def component
     @hosts = Host.all
@@ -54,7 +31,7 @@ class HostsController < ApplicationController
 
   def scann()
 
-    scanner = Scanner.new
+    # scanner = Scanner.new
     teln = Telnet.new
 
     # test = params[:host][:IP]
@@ -68,8 +45,6 @@ class HostsController < ApplicationController
     # end
 
     host_addr = params[:host][:IP]
-    # host_addr = '192.168.0.7'
-    # port_nr = 3000
     port_nr = params[:host][:port].to_i
 
     scann_type = params[:host][:scann_type]
@@ -77,29 +52,59 @@ class HostsController < ApplicationController
     scann_time = 0
 
     if scann_type == 'syn'
-      scann_time = Benchmark.realtime {
-        status = scanner.tcp_syn_scan(host_addr, port_nr)
+      scann_time = Benchmark.realtime{
+
+        src = 1998
+        timeout_value = 5
+        tries = 10
+        sleep_time = 0
+
+        scanner = SYN_scanner.new(host_addr, port_nr, src, timeout_value, tries, sleep_time)
+        status = scanner.scann
       }
+    elsif scann_type == 'udp'
+        scann_time = Benchmark.realtime {
+
+          dst = 53
+          src = 1998
+          timeout_value = 22
+          tries = 4
+          sleep_time = 5
+
+          scanner = UDP_scanner.new(host_addr, dst, src, timeout_value, tries, sleep_time)
+          scanner.set_dst_port(port_nr)
+
+          status = scanner.scann
+    }
 
     elsif scann_type == 'fin'
       scann_time = Benchmark.realtime {
-        status = scanner.tcp_fin_scan(host_addr, port_nr)
+
+          src = 1998
+          timeout_value = 5
+          tries = 10
+          sleep_time = 0
+
+          scanner = FIN_scanner.new(host_addr, port_nr, src, timeout_value, tries, sleep_time)
+          status = scanner.scann
       }
     elsif scann_type == 'xmas'
       scann_time = Benchmark.realtime {
-        status = scanner.tcp_xmas_scan(host_addr, port_nr)
+        # status = scanner.tcp_xmas_scan(host_addr, port_nr)
       }
     elsif scann_type == 'null'
       scann_time = Benchmark.realtime {
-        status = scanner.tcp_null_scan(host_addr, port_nr)
+        # status = scanner.tcp_null_scan(host_addr, port_nr)
       }
-    # elsif scann_type == 'udp'
-    #   scann_time = Benchmark.realtime {
-    #     status = scanner.udp_scan(host_addr, port_nr)
-    #   }
     elsif scann_type == 'icmp'
       scann_time = Benchmark.realtime {
-        status = scanner.icmp_scan(host_addr)
+        # src = 1998
+        # timeout_value = 5
+        # tries = 10
+        # sleep_time = 0
+        #
+        # scanner = ICMP_scanner.new(host_addr, port_nr, src, timeout_value, tries, sleep_time)
+        # status = scanner.scann
       }
     elsif scann_type == 'clear'
       Host.delete_all
@@ -111,6 +116,7 @@ class HostsController < ApplicationController
     end
 
 
+    # todo more telnet for udp
     if status == "up" || "filtered"
       service = teln.connect(host_addr, port_nr)
     end
