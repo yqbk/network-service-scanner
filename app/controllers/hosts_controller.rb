@@ -14,6 +14,8 @@ class HostsController < ApplicationController
   # todo po kolei jakie skany na jakie porty jak w nmap
 
 #   todo telnet udp i ftp
+#   todo node diagram i speed chart
+#   todo button fast scann on second tab
 
 #   <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
 #   <%= line_chart @hosts.group(:scan_id).minimum(:scann_time) %>
@@ -111,6 +113,11 @@ class HostsController < ApplicationController
         else
           status = "down"
         end
+      }
+    elsif scann_type == 'simple'
+      scann_time = Benchmark.realtime {
+
+       puts "dziala"
       }
     elsif scann_type == 'clear'
       Host.delete_all
