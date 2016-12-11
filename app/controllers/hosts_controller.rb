@@ -124,7 +124,25 @@ class HostsController < ApplicationController
 
   def ping(host)
     check = Net::Ping::External.new(host)
-    check.ping?
+    if !check.ping?
+      src = 1998
+      timeout_value = 5
+      tries = 10
+      sleep_time = 0
+
+      scanner = ACK_scanner.new(host, 80, src, timeout_value, tries, sleep_time)
+      status = scanner.scann
+
+      if status != "filtered"
+        return true
+      else
+        return false
+      end
+
+    else
+      return true
+    end
+
   end
 
   def services()

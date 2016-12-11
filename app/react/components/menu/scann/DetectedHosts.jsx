@@ -82,14 +82,14 @@ class DetectedHosts extends Component {
                                 <TableRowColumn>{host.scann_type}</TableRowColumn>
                                 <TableRowColumn>{host.service}</TableRowColumn>
                                 <TableRowColumn>
-                                    {/*<RaisedButton label="Delete"*/}
-                                                  {/*primary={true}*/}
-                                                  {/*onTouchTap={console.log("lala")}*/}
-                                    {/*/>*/}
-                                    {/*<FlatButton label="Save"*/}
-                                                  {/*secondary={true}*/}
-                                                  {/*onTouchTap={console.log("ok")}*/}
-                                    {/*/>*/}
+                                    <FlatButton label="Save"
+                                                secondary={true}
+                                                onTouchTap={() => { alert('save'); }}
+                                    />
+                                    <RaisedButton label="Delete"
+                                                  primary={true}
+                                                  onTouchTap={() => { alert('delete'); }}
+                                    />
                                 </TableRowColumn>
                             </TableRow>
                         ) : null }
