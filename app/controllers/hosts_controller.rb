@@ -2,6 +2,10 @@ require_relative '../../app/controllers/network/scanner'
 require_relative '../../app/controllers/network/fast_scann'
 require_relative '../../app/controllers/network/telnet'
 
+require 'net/ping'
+
+
+
 class HostsController < ApplicationController
 
   # todo OS detection
@@ -17,14 +21,9 @@ class HostsController < ApplicationController
 #   todo node diagram i speed chart
 #   todo button fast scann on second tab
 
-#   <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
-#   <%= line_chart @hosts.group(:scan_id).minimum(:scann_time) %>
-
-
   def component
     @hosts = Host.all
   end
-
 
   def index
     @hosts = Host.all
@@ -38,24 +37,8 @@ class HostsController < ApplicationController
 
   def scann()
 
-    # scanner = Scanner.new
-
-    # test = params[:host][:IP]
-
-    # [6,13,14,18].each do |ip|
-    #   host_addr = params[:host][:IP] + ip.to_s
-    #   puts(host_addr)
-    #   status = scanner.icmp_scan(host_addr)
-    #   @host = Host.new(:IP => host_addr, :status => status)
-    #   @host.save
-    # end
-
     host_addr = params[:host][:IP]
     port_nr = params[:host][:port].to_i
-
-    fast_scanner = FastScann.new
-    fast_scanner.performFastScann(host_addr)
-
     scann_type = params[:host][:scann_type]
     status = '?'
     scann_time = 0
@@ -85,7 +68,6 @@ class HostsController < ApplicationController
 
         status = scanner.scann
       }
-
     elsif scann_type == 'fin'
       scann_time = Benchmark.realtime {
 
@@ -117,7 +99,11 @@ class HostsController < ApplicationController
     elsif scann_type == 'simple'
       scann_time = Benchmark.realtime {
 
-       puts "dziala"
+      #  puts "dziala"
+      #   todo save hosts to database
+      #
+      #  fast_scanner = FastScann.new
+      #  fast_scanner.performFastScann(host_addr)
       }
     elsif scann_type == 'clear'
       Host.delete_all
@@ -128,21 +114,26 @@ class HostsController < ApplicationController
       end
     end
 
-    teln = Telnet.new
+    # if status != "down"
+    #   service = services()
+    # end
 
-    # todo more telnet for udp
-    if status == "up" || "filtered"
-      service = teln.connect(host_addr, port_nr)
-    end
-
-    Host.new(:scan_id => @hosts.count,:IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s, :service => service)
+    Host.new(:scan_id => @hosts.count,:IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s, :service => "blabla")
 
   end
 
+  def ping(host)
+    check = Net::Ping::External.new(host)
+    check.ping?
+  end
+
+  def services()
+    # todo more telnet for udp
+    teln = Telnet.new
+    return teln.connect(host_addr, port_nr)
+  end
+
   def create
-
-
-
     @hosts = Host.all
 
     begin
@@ -154,31 +145,7 @@ class HostsController < ApplicationController
 
     # Host.delete_all
 
-    # render_host()
-
-
-
-    # redirect_to :back
-
-    #
-    # [1..100].each do |ip|
-    #   status = scanner.icmp_scan(:address + ip)
-    #   unless status
-    #     @host = Host.new(:ip => (:address + ip), :end => Time.now)
-    #   end
-    # end
-    #
-    # status = scanner.icmp_scan(params[:host][:IP])
-    #
-    #
-    # @host = Host.new(:IP => params[:host][:IP], :status => status)
-    # @page= Page.new(params[:page].merge(:user_id => 1, :foo => "bar"))
-
-    # if @host.save
-    #   render json: @host
-    # else
-    #   render json: @host.errors, status: :unprocessable_entity
-    # end
+    render_host()
   end
 
   private
@@ -193,6 +160,5 @@ class HostsController < ApplicationController
     else
       render json: @host.errors, status: :unprocessable_entity
     end
-
   end
 end

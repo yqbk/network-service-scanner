@@ -67,7 +67,7 @@ class DetectedHosts extends Component {
                             <TableHeaderColumn>Status</TableHeaderColumn>
                             <TableHeaderColumn>Time</TableHeaderColumn>
                             <TableHeaderColumn>Method</TableHeaderColumn>
-                            {/*<TableHeaderColumn>Service</TableHeaderColumn>*/}
+                            <TableHeaderColumn>Service</TableHeaderColumn>
                             <TableHeaderColumn>Actions</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
@@ -80,7 +80,7 @@ class DetectedHosts extends Component {
                                 <TableRowColumn>{host.status}</TableRowColumn>
                                 <TableRowColumn>{host.scann_time}</TableRowColumn>
                                 <TableRowColumn>{host.scann_type}</TableRowColumn>
-                                {/*<TableRowColumn>{host.service}</TableRowColumn>*/}
+                                <TableRowColumn>{host.service}</TableRowColumn>
                                 <TableRowColumn>
                                     {/*<RaisedButton label="Delete"*/}
                                                   {/*primary={true}*/}
