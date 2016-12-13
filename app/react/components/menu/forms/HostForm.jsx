@@ -8,7 +8,7 @@ class HostForm extends React.Component
     constructor (props) {
         super(props)
 
-        this.methods = ['icmp', 'syn', 'fin', 'udp' ]
+        this.methods = ['ping', 'syn', 'fin', 'udp' ]
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
 
@@ -46,7 +46,7 @@ class HostForm extends React.Component
 
         let ipsString = ips.map( (array) => {  return array.join(".") })
 
-        this.props.setScannAmount(ports.length * ipsString.length )
+        this.props.setScannAmount(ports.length * ipsString.length * scann_type.length )
 
         ipsString.forEach( (singleAddress) => {
             ports.forEach( (singlePort) => {

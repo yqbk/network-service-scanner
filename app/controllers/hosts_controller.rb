@@ -21,6 +21,8 @@ class HostsController < ApplicationController
 #   todo node diagram i speed chart
 #   todo button fast scann on second tab
 
+
+
   def component
     @hosts = Host.all
   end
@@ -35,6 +37,30 @@ class HostsController < ApplicationController
     head :no_content
   end
 
+  def initScanner(name)
+
+    src = 1998 #change here
+    timeout_value = 2
+    tries = 10
+    sleep_time = 0
+
+    if name == 'syn'
+      return SYN_scanner.new(src, timeout_value, tries, sleep_time)
+    elsif name == 'fin'
+      return FIN_scanner.new(src, timeout_value, tries, sleep_time)
+    elsif name == 'udp'
+      timeout_value = 22
+      tries = 4
+      sleep_time = 5
+
+      return UDP_scanner.new(src, timeout_value, tries, sleep_time)
+    else
+      puts "initScanner error"
+      return
+    end
+
+  end
+
   def scann()
 
     host_addr = params[:host][:IP]
@@ -43,41 +69,24 @@ class HostsController < ApplicationController
     status = '?'
     scann_time = 0
 
+
     if scann_type == 'syn'
+      @syn_scanner.set_dst_host(host_addr)
+      @syn_scanner.set_dst_port(port_nr)
       scann_time = Benchmark.realtime{
-
-        src = 1998
-        timeout_value = 5
-        tries = 10
-        sleep_time = 0
-
-        scanner = SYN_scanner.new(host_addr, port_nr, src, timeout_value, tries, sleep_time)
-        status = scanner.scann
-      }
-    elsif scann_type == 'udp'
-      scann_time = Benchmark.realtime {
-
-        dst = 53
-        src = 1998
-        timeout_value = 22
-        tries = 4
-        sleep_time = 5
-
-        scanner = UDP_scanner.new(host_addr, dst, src, timeout_value, tries, sleep_time)
-        scanner.set_dst_port(port_nr)
-
-        status = scanner.scann
+        status = @syn_scanner.scann
       }
     elsif scann_type == 'fin'
+      @fin_scanner.set_dst_host(host_addr)
+      @fin_scanner.set_dst_port(port_nr)
       scann_time = Benchmark.realtime {
-
-        src = 1998
-        timeout_value = 5
-        tries = 10
-        sleep_time = 0
-
-        scanner = FIN_scanner.new(host_addr, port_nr, src, timeout_value, tries, sleep_time)
-        status = scanner.scann
+        status = @fin_scanner.scann
+      }
+    elsif scann_type == 'udp'
+      @udp_scanner.set_dst_host(host_addr)
+      @udp_scanner.set_dst_port(port_nr)
+      scann_time = Benchmark.realtime {
+        status = @udp_scanner.scann
       }
     elsif scann_type == 'xmas'
       scann_time = Benchmark.realtime {
@@ -87,7 +96,7 @@ class HostsController < ApplicationController
       scann_time = Benchmark.realtime {
         # status = scanner.tcp_null_scan(host_addr, port_nr)
       }
-    elsif scann_type == 'icmp'
+    elsif scann_type == 'ping'
       scann_time = Benchmark.realtime {
 
         if ping(host_addr)
@@ -114,13 +123,15 @@ class HostsController < ApplicationController
       end
     end
 
-    # if status != "down"
-    #   service = services()
-    # end
+    if status != "down"
+      service = @teln.connect(host_addr, port_nr)
+    end
 
-    Host.new(:scan_id => @hosts.count,:IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s, :service => "blabla")
+    Host.new(:scan_id => @hosts.count, :IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s, :service => service)
 
   end
+
+
 
   def ping(host)
     check = Net::Ping::External.new(host)
@@ -145,13 +156,26 @@ class HostsController < ApplicationController
 
   end
 
-  def services()
-    # todo more telnet for udp
-    teln = Telnet.new
-    return teln.connect(host_addr, port_nr)
+  def init
+    if @syn_scanner == nil
+      @syn_scanner = initScanner('syn')
+    end
+
+    if @fin_scanner == nil
+      @fin_scanner = initScanner('fin')
+    end
+
+    if @udp_scanner == nil
+      @udp_scanner = initScanner('udp')
+    end
+
+    if @teln == nil
+      @teln = Telnet.new
+    end
   end
 
   def create
+    init()
     @hosts = Host.all
 
     begin
@@ -167,6 +191,7 @@ class HostsController < ApplicationController
   end
 
   private
+
 
   def host_params
     params.require(:host).permit(:IP, :port)

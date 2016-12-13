@@ -10,10 +10,8 @@ class Scanner
   @tries
   @config
 
-  def initialize(ip, dst, src, timeout_value, tries, sleep_time)
+  def initialize(src, timeout_value, tries, sleep_time)
 
-    @ip = ip
-    @dst = dst
     @src = src
     @timeout_value = timeout_value
     @tries = tries
@@ -21,7 +19,6 @@ class Scanner
     @config = PacketFu::Utils.whoami?()
     @status = ""
 
-    @prepared_packet = prepare
   end
 
   def prepare
@@ -98,6 +95,11 @@ class Scanner
 
   def set_dst_port(port)
     @dst = port
+    @prepared_packet = prepare
+  end
+
+  def set_dst_host(ip)
+    @ip = ip
     @prepared_packet = prepare
   end
 

@@ -33,7 +33,13 @@ class Telnet
       service = 'SSH'
     elsif response.downcase.include? 'http'
       service = 'http'
+    elsif response.downcase.include? 'ftp'
+      service = 'FTP'
+    elsif response.downcase.include? 'SMTP'
+      service = 'Mail server'
     end
+
+    puts "\n\n---response--- " + response + " ------\n\n"
 
     service
 
