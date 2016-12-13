@@ -39,7 +39,7 @@ class Telnet
       service = 'Mail server'
     end
 
-    puts "\n\n---response--- " + response + " ------\n\n"
+    # puts "\n\n---response--- " + response + " ------\n\n"
 
     service
 

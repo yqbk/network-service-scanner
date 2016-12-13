@@ -1,5 +1,6 @@
 import React from 'react';
 import LinearProgress from 'material-ui/LinearProgress';
+import CircularProgress from 'material-ui/CircularProgress';
 
 export default class ProgressBar extends React.Component {
 
@@ -31,8 +32,20 @@ export default class ProgressBar extends React.Component {
     }
 
     render() {
+
         return (
             <LinearProgress mode="determinate" value={this.state.completed} />
-        );
+        )
+
+        //todo loading indicator MAREK
+        // this.state.completed === 100 ? return (
+        //         <LinearProgress mode="determinate" value={this.state.completed} />
+        // ) : return (
+        //     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', height: 50 }}>
+        //         <LinearProgress mode="determinate" value={this.state.completed} />
+        //         <CircularProgress />
+        //     </div>
+        //
+        // )
     }
 }

@@ -46,9 +46,12 @@ class HostsController < ApplicationController
 
     if name == 'syn'
       return SYN_scanner.new(src, timeout_value, tries, sleep_time)
+    elsif name == 'ack'
+      return ACK_scanner.new(src, timeout_value, tries, sleep_time)
     elsif name == 'fin'
       return FIN_scanner.new(src, timeout_value, tries, sleep_time)
     elsif name == 'udp'
+
       timeout_value = 22
       tries = 4
       sleep_time = 5
@@ -88,9 +91,11 @@ class HostsController < ApplicationController
       scann_time = Benchmark.realtime {
         status = @udp_scanner.scann
       }
-    elsif scann_type == 'xmas'
+    elsif scann_type == 'ack'
+      @ack_scanner.set_dst_host(host_addr)
+      @ack_scanner.set_dst_port(port_nr)
       scann_time = Benchmark.realtime {
-        # status = scanner.tcp_xmas_scan(host_addr, port_nr)
+        status = @ack_scanner.scann
       }
     elsif scann_type == 'null'
       scann_time = Benchmark.realtime {
@@ -159,6 +164,10 @@ class HostsController < ApplicationController
   def init
     if @syn_scanner == nil
       @syn_scanner = initScanner('syn')
+    end
+
+    if @ack_scanner == nil
+      @ack_scanner = initScanner('ack')
     end
 
     if @fin_scanner == nil

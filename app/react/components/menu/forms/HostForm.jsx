@@ -8,7 +8,7 @@ class HostForm extends React.Component
     constructor (props) {
         super(props)
 
-        this.methods = ['ping', 'syn', 'fin', 'udp' ]
+        this.methods = ['ping', 'syn', 'fin', 'ack', 'udp' ]
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
 
