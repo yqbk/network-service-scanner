@@ -19,6 +19,9 @@ class HostsController < ApplicationController
 #   todo telnet udp i ftp
 #   todo node diagram i speed chart
 #   todo button fast scann on second tab
+#   todo problemy w projekcie - dobranie parametrów / kompromis miedzy wydajnoscia a skutecznoscai
+#   todo wątki
+
 
   @syn_scanner
   @ack_scanner

@@ -54,7 +54,7 @@ class FastScann
     scanner.set_dst_host(ip)
     scanner.set_dst_port(port)
 
-    host_addr, dst,
+    # host_addr, dst,
 
     status = scanner.scann
 
@@ -67,11 +67,15 @@ class FastScann
     if ping(ip)
       if checkIfFiltered(ip,port)
         if checkIfUpForTCP(ip,port)
-          return true
+          puts "  host #{ip}, port #{port} -> up"
+          true
+        else
+          puts "    host #{ip}, port #{port} -> down"
         end
       end
     else
-      return false
+
+      false
     end
 
   end
@@ -79,7 +83,7 @@ class FastScann
   def scannUDP(ip, port)
 
     if checkIfUpForUDP(ip,port)
-      return true
+      true
     end
 
   end
@@ -89,10 +93,16 @@ class FastScann
     check = Net::Ping::External.new(host)
     if !check.ping?
 
-      @ack_scanner.set_dst_host(host)
-      @ack_scanner.set_dst_port(80)
+      src = 1998
+      timeout_value = 2
+      tries = 10
+      sleep_time = 0
 
-      status = @ack_scanner.scann
+      scanner = ACK_scanner.new(src, timeout_value, tries, sleep_time)
+      scanner.set_dst_host(host)
+      scanner.set_dst_port(80)
+
+      status = scanner.scann
 
       if status != "filtered"
         return true
@@ -104,6 +114,8 @@ class FastScann
       return true
     end
 
+    puts "\n\nping finished"
+
   end
 
   def scann(ip)
@@ -111,17 +123,20 @@ class FastScann
     if ping(ip)
       @tcp_ports.each do |port|
         if scannTCP(ip, port)
-          @hosts.push(Host.new(:scan_id => '1', :IP => ip, :port => port, :status => 'up', :scann_type => 'tcp', :scann_time => 1, :service => " "))
+          # todo render host on each success
+          # @hosts.push(Host.new(:scan_id => '1', :IP => ip, :port => port, :status => 'up', :scann_type => 'tcp', :scann_time => 1, :service => " "))
           # @open_tcp_ports.push(port)
         end
       end
 
-      @udp_ports.each do |port|
-        if scannUDP(ip, port)
-          # @open_udp_ports.push(port)
-          @hosts.push(Host.new(:scan_id => '1', :IP => ip, :port => port, :status => 'up', :scann_type => 'udp', :scann_time => 1, :service => " "))
-        end
-      end
+
+
+      # @udp_ports.each do |port|
+      #   if scannUDP(ip, port)
+      #     # @open_udp_ports.push(port)
+      #     @hosts.push(Host.new(:scan_id => '1', :IP => ip, :port => port, :status => 'up', :scann_type => 'udp', :scann_time => 1, :service => " "))
+      #   end
+      # end
     end
   end
 
@@ -145,12 +160,18 @@ class FastScann
     ip = @config[:ip_saddr].split(".")
     network = ip[0] + '.' + ip[1] + '.' + ip[2] + '.'
 
-    (1..255).each do |host|
+    # (1..255).each do |host|
+    [1,52,16,6].each do |host|
+      puts "\n start host #{network + host.to_s}"
       scann(network + host.to_s)
+      puts "\n\n finished host"
     end
 
+    puts "finished"
+    puts "alal"
 
-    @hosts
+    #
+    # @hosts
 
   end
 
