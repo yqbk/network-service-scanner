@@ -8,6 +8,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import FirstTab from './menu/FirstTab'
 import SecondTab from './menu/SecondTab'
+import ScannHistory from './menu/ScannHistory'
 
 
 export default class Main extends React.Component {
@@ -57,7 +58,7 @@ export default class Main extends React.Component {
                             Scann range of adresses or your current network to detect hosts, open ports and services running on them.
                         </p>
                         <FirstTab />
-                        {/*<History hosts={this.props.data}/>*/}
+                        {/*<ScannHistory hosts={this.props.data}/>*/}
                     </div>
                 </Tab>
                 <Tab label="Single Scann" >
@@ -69,13 +70,13 @@ export default class Main extends React.Component {
                         <SecondTab />
                     </div>
                 </Tab>
-                <Tab label="History" >
+                <Tab label="ScannHistory" >
                     <div>
-                        <h2>History</h2>
+                        <h2>Scann History</h2>
                         <p>
                             History of detected hosts
                         </p>
-                        {/*<History hosts={this.props.data}/>*/}
+                        <ScannHistory hosts={this.props.data}/>
                     </div>
                 </Tab>
             </Tabs>

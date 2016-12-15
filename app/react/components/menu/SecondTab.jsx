@@ -33,7 +33,7 @@ class SecondTab extends Component {
 
     performSimpleScann (){
         $.post('http://localhost:3000/hosts', {host: {scann_type: 'simple'}}, (result) => {
-            this.props.addHostToTable(result)
+            console.log(result)
         })
     }
 

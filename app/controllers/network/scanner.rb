@@ -63,27 +63,27 @@ class Scanner
 
 
   def on_icmp_check_success
-    puts "#{@ip} is fitered (icmp received) #{@dst}"
+    puts "SYN: #{@ip} is fitered (icmp received) on port #{@dst}"
     set_status("filtered")
   end
 
   def on_timeout
-    puts "#{@ip} is filtered #{@dst}"
+    puts "SYN: #{@ip} is filtered on port #{@dst}"
     set_status("filtered")
   end
 
   def is_successful
-    puts "#{@ip} is up #{@dst}"
+    puts "SYN: #{@ip} is up on port #{@dst}"
     set_status("up")
   end
 
   def is_not_successful
-    puts "#{@ip} is down #{@dst}"
+    puts "SYN: #{@ip} is down on port #{@dst}"
     set_status("down")
   end
 
   def is_filtered
-    puts "#{@ip} is filtered #{@dst}"
+    puts "SYN: #{@ip} is filtered on port #{@dst}"
     set_status("filtered")
   end
 
@@ -154,12 +154,12 @@ class FIN_scanner < Scanner
 
   # when responded with rst port is down
   def is_successful
-    puts "#{@ip} is down"
+    puts "FIN: #{@ip} is down on port #{dst}"
     set_status("down")
   end
 
   def on_timeout
-    puts "#{@ip} is up"
+    puts "FIN: #{@ip} is up on port #{dst}"
     set_status("up")
   end
 
@@ -183,17 +183,17 @@ class ACK_scanner < Scanner
 
   # when responded with rst port is down
   def is_successful
-    puts "#{@ip} is unfiltered"
+    puts "ACK: #{@ip} is unfiltered on port #{dst}"
     set_status("unfiltered")
   end
 
   def on_timeout
-    puts "#{@ip} is filtered"
+    puts "ACK: #{@ip} is filtered on port #{dst}"
     set_status("filtered")
   end
 
   def on_icmp_check_success
-    puts "#{@ip} is filtered"
+    puts "ACK: #{@ip} is filtered on port #{dst}"
     set_status("filtered")
   end
 
@@ -222,17 +222,17 @@ class UDP_scanner < Scanner
   end
 
   def on_timeout
-    puts "#{@ip} is open|filtered #{@dst}"
+    puts "UDP: #{@ip} is open|filtered on port #{dst}"
     set_status("open or filtered")
   end
 
   def is_successful
-    puts "#{@ip} is up #{@dst}"
+    puts "UDP: #{@ip} is up on port #{dst}"
     set_status("up")
   end
 
   def is_not_successful
-    puts "#{@ip} is down #{@dst}"
+    puts "UDP: #{@ip} is down on port #{dst}"
     set_status("down")
   end
 

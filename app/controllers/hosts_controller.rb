@@ -3,8 +3,7 @@ require_relative '../../app/controllers/network/fast_scann'
 require_relative '../../app/controllers/network/telnet'
 
 require 'net/ping'
-
-
+require 'socket'
 
 class HostsController < ApplicationController
 
@@ -21,7 +20,11 @@ class HostsController < ApplicationController
 #   todo node diagram i speed chart
 #   todo button fast scann on second tab
 
-
+  @syn_scanner
+  @ack_scanner
+  @fin_scanner
+  @udp_scanner
+  @teln
 
   def component
     @hosts = Host.all
@@ -110,29 +113,40 @@ class HostsController < ApplicationController
           status = "down"
         end
       }
-    elsif scann_type == 'simple'
-      scann_time = Benchmark.realtime {
-
-      #  puts "dziala"
-      #   todo save hosts to database
-      #
-      #  fast_scanner = FastScann.new
-      #  fast_scanner.performFastScann(host_addr)
-      }
     elsif scann_type == 'clear'
       Host.delete_all
     else
-      begin
-        redirect_to hosts_url, alert: 'incorrect type'
-        return
-      end
+      # begin
+      #   redirect_to hosts_url, alert: 'incorrect type'
+      #   return
     end
 
-    if status != "down"
-      service = @teln.connect(host_addr, port_nr)
+    # if status != "down"
+    #   service = @teln.connect(host_addr, port_nr)
+    # end
+
+    if scann_type == 'simple'
+      scann_time = Benchmark.realtime {
+
+        #  puts "dziala"
+        #   todo save hosts to database
+        #
+        # ip_address = Socket.ip_address_list.find { |ai| ai.ipv4? && !ai.ipv4_loopback? }.ip_address
+
+        # puts "\n\n\n HERE \n"
+        # puts ip_address
+        # puts "\nTUTAJ\n\n\n"
+
+        fast_scanner = FastScann.new
+        hosts = fast_scanner.performFastScann()
+      }
+    else
+      hosts = Host.new(:scan_id => @hosts.count, :IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s, :service => "lalal")
     end
 
-    Host.new(:scan_id => @hosts.count, :IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s, :service => service)
+    puts "lalal"
+
+    hosts
 
   end
 
@@ -141,13 +155,11 @@ class HostsController < ApplicationController
   def ping(host)
     check = Net::Ping::External.new(host)
     if !check.ping?
-      src = 1998
-      timeout_value = 5
-      tries = 10
-      sleep_time = 0
 
-      scanner = ACK_scanner.new(host, 80, src, timeout_value, tries, sleep_time)
-      status = scanner.scann
+      @ack_scanner.set_dst_host(host)
+      @ack_scanner.set_dst_port(80)
+
+      status = @ack_scanner.scann
 
       if status != "filtered"
         return true
@@ -161,47 +173,26 @@ class HostsController < ApplicationController
 
   end
 
-  def init
-    if @syn_scanner == nil
-      @syn_scanner = initScanner('syn')
-    end
-
-    if @ack_scanner == nil
-      @ack_scanner = initScanner('ack')
-    end
-
-    if @fin_scanner == nil
-      @fin_scanner = initScanner('fin')
-    end
-
-    if @udp_scanner == nil
-      @udp_scanner = initScanner('udp')
-    end
-
-    if @teln == nil
-      @teln = Telnet.new
-    end
-  end
-
   def create
-    init()
     @hosts = Host.all
+    @syn_scanner = initScanner('syn')
+    @ack_scanner = initScanner('ack')
+    @fin_scanner = initScanner('fin')
+    @udp_scanner = initScanner('udp')
+    @teln = Telnet.new
 
     begin
       @host = scann()
       @host.save
+      # Host.delete_all
     rescue NoMethodError
       nil
     end
-
-    # Host.delete_all
 
     render_host()
   end
 
   private
-
-
   def host_params
     params.require(:host).permit(:IP, :port)
   end

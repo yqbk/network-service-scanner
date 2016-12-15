@@ -1,8 +1,8 @@
+require 'packetfu'
+
 class FastScann
 
   private
-  @tcp_ports = [21,22,23,24,25,53,80,443,1723,3389,4567,8080]
-  @udp_ports = [53,111,123,137,161]
 
 
   def checkIfFiltered (ip, port)
@@ -12,7 +12,9 @@ class FastScann
     tries = 10
     sleep_time = 0
 
-    scanner = ACK_scanner.new(ip, port, src, timeout_value, tries, sleep_time)
+    scanner = ACK_scanner.new(src, timeout_value, tries, sleep_time)
+    scanner.set_dst_host(ip)
+    scanner.set_dst_port(port)
     status = scanner.scann
 
     return status == 'unfiltered'
@@ -26,11 +28,15 @@ class FastScann
     tries = 10
     sleep_time = 0
 
-    scanner = FIN_scanner.new(ip, port, src, timeout_value, tries, sleep_time)
+    scanner = FIN_scanner.new(src, timeout_value, tries, sleep_time)
+    scanner.set_dst_host(ip)
+    scanner.set_dst_port(port)
     status_fin = scanner.scann
 
-    scanner = SYN_scanner.new(ip, port, src, timeout_value, tries, sleep_time)
-    status_syn = scanner.scann
+    scanner2 = SYN_scanner.new( src, timeout_value, tries, sleep_time)
+    scanner2.set_dst_host(ip)
+    scanner2.set_dst_port(port)
+    status_syn = scanner2.scann
 
     return status_fin == 'up' || status_syn =='up'
 
@@ -44,7 +50,12 @@ class FastScann
     tries = 4
     sleep_time = 5
 
-    scanner = UDP_scanner.new(host_addr, dst, src, timeout_value, tries, sleep_time)
+    scanner = UDP_scanner.new( src, timeout_value, tries, sleep_time)
+    scanner.set_dst_host(ip)
+    scanner.set_dst_port(port)
+
+    host_addr, dst,
+
     status = scanner.scann
 
     return status == 'up'
@@ -73,27 +84,73 @@ class FastScann
 
   end
 
-  public
+  # todo repetition of ping method
+  def ping(host)
+    check = Net::Ping::External.new(host)
+    if !check.ping?
 
-  @open_tcp_ports = []
-  @open_udp_ports = []
+      @ack_scanner.set_dst_host(host)
+      @ack_scanner.set_dst_port(80)
 
+      status = @ack_scanner.scann
 
-  def performFastScann(ip)
+      if status != "filtered"
+        return true
+      else
+        return false
+      end
+
+    else
+      return true
+    end
+
+  end
+
+  def scann(ip)
 
     if ping(ip)
       @tcp_ports.each do |port|
         if scannTCP(ip, port)
-          @open_tcp_ports.push(port)
+          @hosts.push(Host.new(:scan_id => '1', :IP => ip, :port => port, :status => 'up', :scann_type => 'tcp', :scann_time => 1, :service => " "))
+          # @open_tcp_ports.push(port)
         end
       end
 
       @udp_ports.each do |port|
         if scannUDP(ip, port)
-          @open_udp_ports.push(port)
+          # @open_udp_ports.push(port)
+          @hosts.push(Host.new(:scan_id => '1', :IP => ip, :port => port, :status => 'up', :scann_type => 'udp', :scann_time => 1, :service => " "))
         end
       end
     end
+  end
+
+  public
+
+  @tcp_ports
+  @udp_ports
+  @open_tcp_ports = []
+  @open_udp_ports = []
+  @hosts = []
+
+
+  def performFastScann()
+
+    @config = PacketFu::Utils.whoami?()
+
+    @tcp_ports = [21,22,23,24,25,53,80,443,1723,3389,4567,8080]
+    @udp_ports = [53,111,123,137,161]
+
+
+    ip = @config[:ip_saddr].split(".")
+    network = ip[0] + '.' + ip[1] + '.' + ip[2] + '.'
+
+    (1..255).each do |host|
+      scann(network + host.to_s)
+    end
+
+
+    @hosts
 
   end
 
