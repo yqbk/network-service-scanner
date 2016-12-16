@@ -123,6 +123,8 @@ class SimpleScann
     if ping(ip)
       @tcp_ports.each do |port|
         if scannTCP(ip, port)
+          host = Host.new(:scan_id => '1', :IP => ip, :port => port, :status => 'up', :scann_type => 'tcp', :scann_time => 1, :service => " ")
+          push_host(host)
           # todo render host on each success
           # @hosts.push(Host.new(:scan_id => '1', :IP => ip, :port => port, :status => 'up', :scann_type => 'tcp', :scann_time => 1, :service => " "))
           # @open_tcp_ports.push(port)
@@ -140,6 +142,19 @@ class SimpleScann
     end
   end
 
+  def push_host(host)
+
+    host.save
+
+    if host.save
+      render json: host
+    else
+      render json: host.errors, status: :unprocessable_entity
+    end
+
+  end
+
+
   public
 
   @tcp_ports
@@ -155,23 +170,20 @@ class SimpleScann
 
     @tcp_ports = [21,22,23,24,25,53,80,443,1723,3389,4567,8080]
     @udp_ports = [53,111,123,137,161]
-
-
-    ip = @config[:ip_saddr].split(".")
-    network = ip[0] + '.' + ip[1] + '.' + ip[2] + '.'
+    #
+    #
+    # ip = @config[:ip_saddr].split(".")
+    # network = ip[0] + '.' + ip[1] + '.' + ip[2] + '.'
 
     # (1..255).each do |host|
-    [1,52,16,6].each do |host|
-      puts "\n start host #{network + host.to_s}"
-      scann(network + host.to_s)
-      puts "\n\n finished host"
-    end
+    # [1,52,16,6].each do |host|
+    #   puts "\n start host #{network + host.to_s}"
+    #   scann(network + host.to_s)
+    #   puts "\n\n finished host"
+    # end
 
-    puts "finished"
-    puts "alal"
+    scann("192.168.0.54")
 
-    #
-    # @hosts
 
   end
 
