@@ -63,27 +63,27 @@ class Scanner
 
 
   def on_icmp_check_success
-    # puts "SYN: #{@ip} is fitered (icmp received) on port #{@dst}"
+    puts "SYN: #{@ip} is fitered (icmp received) on port #{@dst}"
     set_status("filtered")
   end
 
   def on_timeout
-    # puts "SYN: #{@ip} is filtered on port #{@dst}"
+    puts "SYN: #{@ip} is filtered on port #{@dst}"
     set_status("filtered")
   end
 
   def is_successful
-    # puts "SYN: #{@ip} is up on port #{@dst}"
+    puts "SYN: #{@ip} is up on port #{@dst}"
     set_status("up")
   end
 
   def is_not_successful
-    # puts "SYN: #{@ip} is down on port #{@dst}"
+    puts "SYN: #{@ip} is down on port #{@dst}"
     set_status("down")
   end
 
   def is_filtered
-    # puts "SYN: #{@ip} is filtered on port #{@dst}"
+    puts "SYN: #{@ip} is filtered on port #{@dst}"
     set_status("filtered")
   end
 
@@ -154,12 +154,12 @@ class FIN_scanner < Scanner
 
   # when responded with rst port is down
   def is_successful
-    # puts "FIN: #{@ip} is down on port #{@dst}"
+    puts "FIN: #{@ip} is down on port #{@dst}"
     set_status("down")
   end
 
   def on_timeout
-    # puts "FIN: #{@ip} is up on port #{@dst}"
+    puts "FIN: #{@ip} is up on port #{@dst}"
     set_status("up")
   end
 
@@ -183,17 +183,17 @@ class ACK_scanner < Scanner
 
   # when responded with rst port is down
   def is_successful
-    # puts "ACK: #{@ip} is unfiltered on port #{@dst}"
+    puts "ACK: #{@ip} is unfiltered on port #{@dst}"
     set_status("unfiltered")
   end
 
   def on_timeout
-    # puts "ACK: #{@ip} is filtered on port #{@dst}"
+    puts "ACK: #{@ip} is filtered on port #{@dst}"
     set_status("filtered")
   end
 
   def on_icmp_check_success
-    # puts "ACK: #{@ip} is filtered on port #{@dst}"
+    puts "ACK: #{@ip} is filtered on port #{@dst}"
     set_status("filtered")
   end
 
@@ -222,17 +222,17 @@ class UDP_scanner < Scanner
   end
 
   def on_timeout
-    # puts "UDP: #{@ip} is open|filtered on port #{@dst}"
+    puts "UDP: #{@ip} is open|filtered on port #{@dst}"
     set_status("open or filtered")
   end
 
   def is_successful
-    # puts "UDP: #{@ip} is up on port #{@dst}"
+    puts "UDP: #{@ip} is up on port #{@dst}"
     set_status("up")
   end
 
   def is_not_successful
-    # puts "UDP: #{@ip} is down on port #{@dst}"
+    puts "UDP: #{@ip} is down on port #{@dst}"
     set_status("down")
   end
 
@@ -246,12 +246,12 @@ class UDP_scanner < Scanner
           cap = PacketFu::Capture.new(:iface => @config[:iface], :start => true)
           cap.stream.each do |p|
             pkt = PacketFu::Packet.parse p
-#             # puts("czujka -> " + @dst.to_s)
+#             puts("czujka -> " + @dst.to_s)
             if check_packet_type(pkt)
               is_successful
               break
             elsif check_if_icmp(pkt)
-#               # puts (" dostałem icmp: " + pkt.icmp_type.to_s + " - " + pkt.icmp_code.to_s)
+#               puts (" dostałem icmp: " + pkt.icmp_type.to_s + " - " + pkt.icmp_code.to_s)
               if pkt.icmp_type == 3 and pkt.icmp_code == 3
                 is_not_successful
               elsif pkt.icmp_type == 3 and (pkt.icmp_code == 0 or 1 or 2 or 9 or 10 or 13)

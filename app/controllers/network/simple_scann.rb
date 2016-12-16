@@ -1,6 +1,6 @@
 require 'packetfu'
 
-class FastScann
+class SimpleScann
 
   private
 

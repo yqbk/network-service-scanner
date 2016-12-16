@@ -1,6 +1,6 @@
 require_relative '../../app/controllers/network/scanner'
-require_relative '../../app/controllers/network/fast_scann'
-require_relative '../../app/controllers/network/telnet'
+require_relative '../../app/controllers/network/simple_scann'
+require_relative '../../app/controllers/network/scanner_utils'
 
 require 'net/ping'
 require 'socket'
@@ -21,6 +21,8 @@ class HostsController < ApplicationController
 #   todo button fast scann on second tab
 #   todo problemy w projekcie - dobranie parametrów / kompromis miedzy wydajnoscia a skutecznoscai
 #   todo wątki
+
+  #todo ack nie wypisuje
 
 
   @syn_scanner
@@ -80,24 +82,36 @@ class HostsController < ApplicationController
 
 
     if scann_type == 'syn'
+      if @syn_scanner == nil
+        @syn_scanner = initScanner('syn')
+      end
       @syn_scanner.set_dst_host(host_addr)
       @syn_scanner.set_dst_port(port_nr)
       scann_time = Benchmark.realtime{
         status = @syn_scanner.scann
       }
     elsif scann_type == 'fin'
+      if @fin_scanner == nil
+        @fin_scanner = initScanner('fin')
+      end
       @fin_scanner.set_dst_host(host_addr)
       @fin_scanner.set_dst_port(port_nr)
       scann_time = Benchmark.realtime {
         status = @fin_scanner.scann
       }
     elsif scann_type == 'udp'
+      if @udp_scanner == nil
+        @udp_scanner = initScanner('udp')
+      end
       @udp_scanner.set_dst_host(host_addr)
       @udp_scanner.set_dst_port(port_nr)
       scann_time = Benchmark.realtime {
         status = @udp_scanner.scann
       }
     elsif scann_type == 'ack'
+      if @ack_scanner == nil
+        @ack_scanner = initScanner('ack')
+      end
       @ack_scanner.set_dst_host(host_addr)
       @ack_scanner.set_dst_port(port_nr)
       scann_time = Benchmark.realtime {
@@ -125,6 +139,9 @@ class HostsController < ApplicationController
     end
 
     # if status != "down"
+    # if @teln = nil
+    #   @teln = ScannerUtils.new
+    # end
     #   service = @teln.connect(host_addr, port_nr)
     # end
 
@@ -140,7 +157,7 @@ class HostsController < ApplicationController
         # puts ip_address
         # puts "\nTUTAJ\n\n\n"
 
-        fast_scanner = FastScann.new
+        fast_scanner = SimpleScann.new
         hosts = fast_scanner.performFastScann()
       }
     else
@@ -178,11 +195,11 @@ class HostsController < ApplicationController
 
   def create
     @hosts = Host.all
-    @syn_scanner = initScanner('syn')
-    @ack_scanner = initScanner('ack')
-    @fin_scanner = initScanner('fin')
-    @udp_scanner = initScanner('udp')
-    @teln = Telnet.new
+
+
+    # init scanners if not initialized yet
+
+
 
     begin
       @host = scann()

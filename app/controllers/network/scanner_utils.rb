@@ -1,8 +1,9 @@
+require 'net/ping'
 require 'net/telnet'
 
-class Telnet
+class ScannerUtils
 
-  def connect(ip, port)
+  def telnet(ip, port)
 
     service = '?'
 
@@ -17,7 +18,7 @@ class Telnet
           "Timeout"    => 1,           # default: 10
           # if ignore timeout then set "Timeout" to false.
           "Waittime"   => 0            # default: 0
-      # proxy is Net::Telnet or IO object
+      # proxy is Net::ScannerUtils or IO object
       )
 
       response = host.cmd('')
@@ -39,12 +40,31 @@ class Telnet
       service = 'Mail server'
     end
 
-    # puts "\n\n---response--- " + response + " ------\n\n"
+    puts "\n\n---response--- " + response + " ------\n\n"
 
     service
 
   end
 
 
+  def ping(host)
+    check = Net::Ping::External.new(host)
+    if !check.ping?
+
+      @ack_scanner.set_dst_host(host)
+      @ack_scanner.set_dst_port(80)
+
+      status = @ack_scanner.scann
+
+      if status != "filtered"
+        true
+      else
+        false
+      end
+
+    else
+      true
+    end
+  end
 
 end
