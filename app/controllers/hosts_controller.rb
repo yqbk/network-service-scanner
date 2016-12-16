@@ -232,6 +232,7 @@ class HostsController < ApplicationController
     else
       @host = Host.new(:scan_id => @hosts.count, :IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s, :service => "lalal")
       save_host
+      render_host()
     end
 
     puts "lalal"
@@ -387,6 +388,8 @@ class HostsController < ApplicationController
 
     perform_simple_scann("192.168.0.54")
 
+    render_host()
+
     puts "test 3"
   end
 
@@ -435,7 +438,6 @@ class HostsController < ApplicationController
 
   def save_host()
     @host.save
-    render_host()
   end
 
   def host_params

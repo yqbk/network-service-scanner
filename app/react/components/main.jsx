@@ -67,7 +67,7 @@ export default class Main extends React.Component {
                         <p>
                             Choose parameters to perform single scann on host or compare results of different scanning methods.
                         </p>
-                        <SecondTab />
+                        <SecondTab hosts={this.props.data}/>
                     </div>
                 </Tab>
                 <Tab label="ScannHistory" >
