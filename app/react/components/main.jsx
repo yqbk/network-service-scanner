@@ -11,6 +11,39 @@ import SecondTab from './menu/SecondTab'
 import ScannHistory from './menu/ScannHistory'
 
 
+import {orange500} from 'material-ui/styles/colors';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import {
+    blue500, orange700,
+    pinkA200,
+    grey100, grey300, grey400, grey500,
+    white, darkBlack, fullBlack, orange200
+} from 'material-ui/styles/colors';
+
+const muiTheme = getMuiTheme({
+    palette: {
+        primary1Color: blue500,
+        primary2Color: orange700,
+        primary3Color: grey400,
+        accent1Color: orange200,
+        accent2Color: grey100,
+        accent3Color: grey500,
+        textColor: darkBlack,
+        alternateTextColor: white,
+        canvasColor: white,
+        borderColor: grey300,
+        // disabledColor: fade(darkBlack, 0.3),
+        pickerHeaderColor: orange500,
+        // clockCircleColor: fade(darkBlack, 0.07),
+        shadowColor: fullBlack,
+    },
+    appBar: {
+        height: 50,
+    },
+});
+
+
 export default class Main extends React.Component {
 
     constructor (props)
@@ -18,6 +51,20 @@ export default class Main extends React.Component {
         super(props)
         this.handleActive = this.handleActive.bind(this);
         injectTapEventPlugin();
+
+        this.state = {
+            hosts: props.data
+        }
+    }
+
+
+
+    componentWillReceiveProps(nextProps) {
+        // You don't have to do this check first, but it can help prevent an unneeded render
+        if (nextProps.data !== this.state.hosts) {
+            console.log("\n\nzmiana w main!!\n\n")
+            this.setState({ hosts: nextProps.data });
+        }
     }
 
     static childContextTypes =
@@ -50,6 +97,8 @@ export default class Main extends React.Component {
 
         return (
 
+        <MuiThemeProvider muiTheme={muiTheme}>
+
             <Tabs>
                 <Tab label="Scann" >
                     <div>
@@ -67,7 +116,7 @@ export default class Main extends React.Component {
                         <p>
                             Choose parameters to perform single scann on host or compare results of different scanning methods.
                         </p>
-                        <SecondTab hosts={this.props.data}/>
+                        <SecondTab hosts={this.state.hosts}/>
                     </div>
                 </Tab>
                 <Tab label="ScannHistory" >
@@ -76,10 +125,11 @@ export default class Main extends React.Component {
                         <p>
                             History of detected hosts
                         </p>
-                        <ScannHistory hosts={this.props.data}/>
+                        <ScannHistory hosts={this.state.hosts}/>
                     </div>
                 </Tab>
             </Tabs>
+        </MuiThemeProvider>
         );
     }
 }

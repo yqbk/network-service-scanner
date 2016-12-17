@@ -11,6 +11,7 @@ const ScannHistory = (props) => {
                     <td>Port</td>
                     <td>Status</td>
                     <td>Time</td>
+                    <td>Date Time</td>
                     <td>Method</td>
                     <td>Service</td>
                     <td>Actions</td>
@@ -18,12 +19,13 @@ const ScannHistory = (props) => {
                 </thead>
                 <tbody>
 
-                {props.hosts.map(host =>
-                    <tr>
+                {props.hosts.map((host, index) =>
+                    <tr key={`TableRow-${index}`}>
                         <td>{host.IP}</td>
                         <td>{host.port}</td>
                         <td>{host.status}</td>
                         <td>{host.scann_time}</td>
+                        <td>{host.created_at}</td>
                         <td>{host.scann_type}</td>
                         <td>{host.service}</td>
                         <td>

@@ -243,17 +243,18 @@ class HostsController < ApplicationController
 
   def checkIfFiltered (ip, port)
 
-    src = 1998
-    timeout_value = 5
-    tries = 10
-    sleep_time = 0
+    # src = 1998
+    # timeout_value = 5
+    # tries = 10
+    # sleep_time = 0
+    #
+    # @ack_scanner.set_dst_host(ip)
+    # @ack_scanner.set_dst_port(port)
+    # status = @ack_scanner.scann
+    #
+    # return status == 'unfiltered'
 
-    scanner = ACK_scanner.new(src, timeout_value, tries, sleep_time)
-    scanner.set_dst_host(ip)
-    scanner.set_dst_port(port)
-    status = scanner.scann
-
-    return status == 'unfiltered'
+    true
 
   end
 
@@ -263,6 +264,8 @@ class HostsController < ApplicationController
     timeout_value = 5
     tries = 10
     sleep_time = 0
+
+
 
     scanner = FIN_scanner.new(src, timeout_value, tries, sleep_time)
     scanner.set_dst_host(ip)
