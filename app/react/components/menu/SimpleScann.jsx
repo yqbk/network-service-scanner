@@ -1,12 +1,8 @@
 import React, { Component } from 'react'
-import HostForm from './forms/HostForm'
 import DetectedHosts from './scann/DetectedHosts';
 import ProgressBar from './forms/progressBar'
 import Graph from '../libs/index'
-import { LineChart, PieChart } from 'react-chartkick';
-
 import RaisedButton from 'material-ui/RaisedButton';
-import MyMuiDataTable from './forms/MuiDataTable'
 
 class FirstTab extends Component {
 
@@ -38,18 +34,19 @@ class FirstTab extends Component {
     }
 
     getActiveHosts(){
-        let hosts = []
 
-        $.post('http://localhost:3000/hosts', {host: {scann_type: 'getActiveHosts'}}, (result) => {
-            hosts = result
-        })
+        //todo marek? get active hosts
 
-        return ['192.168.88.1','192.168.88.6', '192.168.88.12','192.168.88.14', '192.168.88.15']
+        // let hosts = []
+
+        // $.post('http://localhost:3000/hosts', {host: {scann_type: 'getActiveHosts'}}, (result) => {
+        //     hosts = result
+        // })
+
+        return ['192.168.88.6','192.168.88.14']
 
         // return ['192.168.88.19']
     }
-
-
 
     performSimpleScann (){
 
@@ -61,13 +58,14 @@ class FirstTab extends Component {
         console.log(this.state.scannAmount)
 
         // todo marek render after finished not in loop execution
+        // todo add udp scann to simple scann?
+        //todo check with fin scann one more time?
 
         hosts.forEach( (host) =>
         {
             tcp_ports.forEach( (port) =>
             {
                 $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'ack'}}, (resultAck) => {
-
                     resultAck.status == 'filtered' ? null : $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'syn'}}, (resultSyn) => {
                         resultSyn.status != 'down' ? this.addHostToTable(resultSyn) :
                             // $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'fin'}}, (resultFin) => {
@@ -75,30 +73,28 @@ class FirstTab extends Component {
                                 null
                         // })
                     })
-
-                        //todo check with fin scann one more time?
-
-                        // console.log(this.state.hostTable)
-                    })
                 })
             })
-        }
-
-
+        })
+    }
 
     render () {
 
         const hostNodes = this.state.hostTable.map( (host, index) => {
-            return {id: index, label: host.IP}
+            return {id: index, label: host.IP + " : " + host.port }
             })
 
-        const hostEdges = this.state.hostTable.map( (host, index) => {
-            return index !== 0 ? {from: 0, to: index} : {}
-        })
+        const hostEdges = this.state.hostTable.reduce( (result, host, index ) => {
+            const edges =  this.state.hostTable.reduce( (table, element, id) => {
+                return index < id ? [...table, {from: id, to: index}] : table
+            }, [])
+            return [...result, edges]
+        }, [])
 
-        var data = {
+
+        const data = {
             nodes: hostNodes,
-            edges: hostEdges
+            edges: [].concat.apply([], hostEdges)
         };
 
         return (
@@ -108,8 +104,8 @@ class FirstTab extends Component {
                               onTouchTap={() => { this.performSimpleScann() }}
                 />
                 <hr/>
-                <ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>
-                <hr/>
+                {/*<ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>*/}
+                {/*<hr/>*/}
                 <DetectedHosts hostTable = {this.state.hostTable} deleteHost = {this.deleteHost} />
                 <Graph graph={data}/>
             </div>
