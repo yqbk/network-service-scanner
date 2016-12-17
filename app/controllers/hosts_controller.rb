@@ -213,22 +213,10 @@ class HostsController < ApplicationController
     #   service = @teln.connect(host_addr, port_nr)
     # end
 
-    if scann_type == 'simple'
-      scann_time = Benchmark.realtime {
-        #
-        # #  puts "dziala"
-        # #   todo save hosts to database
-        # #
-        # # ip_address = Socket.ip_address_list.find { |ai| ai.ipv4? && !ai.ipv4_loopback? }.ip_address
-        #
-        # # puts "\n\n\n HERE \n"
-        # # puts ip_address
-        # # puts "\nTUTAJ\n\n\n"
-        #
-        # fast_scanner = SimpleScann.new
-        # fast_scanner.performFastScann()
-        # hosts = nil
-      }
+    if scann_type == 'getActiveHosts'
+      puts "\n\n\n getActiveHosts"
+      simple_scann()
+      puts " getActiveHosts finished\n\n\n"
     else
       @host = Host.new(:scan_id => @hosts.count, :IP => host_addr, :port => port_nr, :status => status, :scann_type => scann_type, :scann_time => scann_time.round(5).to_s, :service => "lalal")
       save_host
@@ -373,27 +361,26 @@ class HostsController < ApplicationController
     @open_udp_ports = []
     @hosts = []
 
-    # @tcp_ports = [21,22,23,24,25,53,80,443,1723,3389,4567,8080]
-    # @udp_ports = [53,111,123,137,161]
-    #
-    #
-    # ip = @config[:ip_saddr].split(".")
-    # network = ip[0] + '.' + ip[1] + '.' + ip[2] + '.'
 
-    # (1..255).each do |host|
-    # [1,52,16,6].each do |host|
-    #   puts "\n start host #{network + host.to_s}"
-    #   perform_simple_scann(network + host.to_s)
-    #   puts "\n\n finished host"
-    # end
+    ip = @config[:ip_saddr].split(".")
+    network = ip[0] + '.' + ip[1] + '.' + ip[2] + '.'
 
-    puts "test 2"
+    (1..255).each do |host|
+      @hosts.append(network + host.to_s)
+      puts "\n host: #{network + host.to_s}"
+      # perform_simple_scann(network + host.to_s)
+      # puts "\n\n finished host"
+    end
 
-    perform_simple_scann("192.168.0.54")
+    puts "#{@hosts.length}"
 
-    render_host()
+    render json: @hosts
 
-    puts "test 3"
+
+
+               # perform_simple_scann("192.168.0.54")
+
+    # render_host()
   end
 
 

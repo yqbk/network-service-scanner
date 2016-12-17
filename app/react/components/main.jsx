@@ -9,6 +9,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import FirstTab from './menu/FirstTab'
 import SecondTab from './menu/SecondTab'
 import ScannHistory from './menu/ScannHistory'
+import SimpleScann from './menu/SimpleScann'
 
 
 import {orange500} from 'material-ui/styles/colors';
@@ -116,7 +117,7 @@ export default class Main extends React.Component {
                         <p>
                             Choose parameters to perform single scann on host or compare results of different scanning methods.
                         </p>
-                        <SecondTab hosts={this.state.hosts}/>
+                        <SimpleScann />
                     </div>
                 </Tab>
                 <Tab label="ScannHistory" >
