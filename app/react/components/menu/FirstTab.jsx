@@ -23,7 +23,6 @@ class FirstTab extends Component {
     }
 
     addHostToTable (host) {
-        // this.hostTable.push("llala")
 
         const tablica  = this.state.hostTable
 
@@ -50,8 +49,6 @@ class FirstTab extends Component {
 
         console.log("delete -> " + index)
     }
-
-
 
     render () {
 

@@ -44,9 +44,9 @@ class FirstTab extends Component {
             hosts = result
         })
 
-        return ['192.168.88.1','192.168.88.6', '192.168.88.12','192.168.88.14', '192.168.88.15','192.168.88.19']
+        return ['192.168.88.1','192.168.88.6', '192.168.88.12','192.168.88.14', '192.168.88.15']
 
-        // return ['192.168.88.6']
+        // return ['192.168.88.19']
     }
 
 
@@ -57,6 +57,11 @@ class FirstTab extends Component {
         const tcp_ports = [21,22,23,24,25,53,80,443,1723,3000,3389,4567,8080]
         const udp_ports = [53,111,123,137,161]
 
+        this.setScannAmount(tcp_ports.length * hosts.length)
+        console.log(this.state.scannAmount)
+
+        // todo marek render after finished not in loop execution
+
         hosts.forEach( (host) =>
         {
             tcp_ports.forEach( (port) =>
@@ -64,36 +69,37 @@ class FirstTab extends Component {
                 $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'ack'}}, (resultAck) => {
 
                     resultAck.status == 'filtered' ? null : $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'syn'}}, (resultSyn) => {
-                        resultSyn.status != 'down' ? this.addHostToTable(resultSyn) : $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'fin'}}, (resultFin) => {
-                            resultFin.status != 'down' ? this.addHostToTable(resultFin): null
-                        })
+                        resultSyn.status != 'down' ? this.addHostToTable(resultSyn) :
+                            // $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'fin'}}, (resultFin) => {
+                            // resultFin.status != 'down' ? this.addHostToTable(resultFin):
+                                null
+                        // })
                     })
 
                         //todo check with fin scann one more time?
 
-                        console.log(this.state.hostTable)
+                        // console.log(this.state.hostTable)
                     })
                 })
             })
         }
 
-        // this.state.scannDateTime = new Date()
-        // this.state.hostTable = this.props.hosts
-        //
-        // const addresses = this.getActiveHosts()
-        //
-        // $.post('http://localhost:3000/hosts', {host: {scann_type: 'simple'}}, (result) => {
-        //     console.log("przed " + this.state.hostTable.length)
-        //     this.forceUpdate()
-        //     console.log("po " + this.state.hostTable.length)
-        //     // console.log(result)
-        //     // this.props.addHostToTable(result)
-        // })
-
 
 
     render () {
 
+        const hostNodes = this.state.hostTable.map( (host, index) => {
+            return {id: index, label: host.IP}
+            })
+
+        const hostEdges = this.state.hostTable.map( (host, index) => {
+            return index !== 0 ? {from: 0, to: index} : {}
+        })
+
+        var data = {
+            nodes: hostNodes,
+            edges: hostEdges
+        };
 
         return (
             <div>
@@ -101,13 +107,11 @@ class FirstTab extends Component {
                               primary={true}
                               onTouchTap={() => { this.performSimpleScann() }}
                 />
-                {/*<HostForm addHostToTable = {this.addHostToTable} setScannAmount = {this.setScannAmount}/>*/}
-                {/*<ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>*/}
-                {/*<Graph graph={data}/>*/}
-                {/*<LineChart data={{"2013-02-10 00:00:00 -0800": 11, "2013-02-11 00:00:00 -0800": 6}} />*/}
                 <hr/>
-                {/*<MyMuiDataTable hostTable = {this.state.hostTable}/>*/}
+                <ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>
+                <hr/>
                 <DetectedHosts hostTable = {this.state.hostTable} deleteHost = {this.deleteHost} />
+                <Graph graph={data}/>
             </div>
         )
     }

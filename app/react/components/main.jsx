@@ -19,7 +19,7 @@ import {
     blue500, orange700,
     pinkA200,
     grey100, grey300, grey400, grey500,
-    white, darkBlack, fullBlack, orange200
+    white, darkBlack, fullBlack,
 } from 'material-ui/styles/colors';
 
 const muiTheme = getMuiTheme({
@@ -27,7 +27,7 @@ const muiTheme = getMuiTheme({
         primary1Color: blue500,
         primary2Color: orange700,
         primary3Color: grey400,
-        accent1Color: orange200,
+        accent1Color: orange700,
         accent2Color: grey100,
         accent3Color: grey500,
         textColor: darkBlack,

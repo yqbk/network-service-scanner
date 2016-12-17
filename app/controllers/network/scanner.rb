@@ -112,7 +112,7 @@ class Scanner
           cap.stream.each do |p|
             pkt = PacketFu::Packet.parse p
             if check_packet_type(pkt)
-              if check_packet_flags(pkt)    #fails if first is false or check second condition?
+              if check_packet_flags(pkt)
                 is_successful
                 break
               elsif check_tcp_rst(pkt)
@@ -276,7 +276,3 @@ class UDP_scanner < Scanner
   end
 
 end
-
-
-
-
