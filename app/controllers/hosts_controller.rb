@@ -422,6 +422,7 @@ class HostsController < ApplicationController
     rescue NoMethodError
       nil
     end
+    Host.delete_all
   end
 
   private

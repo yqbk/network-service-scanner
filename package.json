@@ -30,6 +30,7 @@
     "forever": "^0.15.0",
     "http": "*",
     "httpdispatcher": "^1.0.0",
+    "ip": "^1.1.4",
     "lodash": "^4.17.2",
     "material-ui": "^0.16.4",
     "mui-data-table": "^0.1.5",

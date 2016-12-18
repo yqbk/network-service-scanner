@@ -3,6 +3,10 @@ import DetectedHosts from './scann/DetectedHosts';
 import ProgressBar from './forms/progressBar'
 import Graph from '../libs/index'
 import RaisedButton from 'material-ui/RaisedButton';
+import ip from 'ip';
+
+import _ from 'lodash'
+
 
 class FirstTab extends Component {
 
@@ -33,19 +37,35 @@ class FirstTab extends Component {
         })
     }
 
+    localIP(callback){
+
+        //todo marek callback???
+
+        var myIp = 0
+        window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;   //compatibility for firefox and chrome
+        var pc = new RTCPeerConnection({iceServers:[]}), noop = function(){};
+        pc.createDataChannel("");    //create a bogus data channel
+        pc.createOffer(pc.setLocalDescription.bind(pc), noop);    // create offer and set local description
+        pc.onicecandidate = function(ice){  //listen for candidate events
+            if(!ice || !ice.candidate || !ice.candidate.candidate)  return;
+            const IP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+            if(callback) callback(IP);
+            pc.onicecandidate = noop;
+        };
+
+    }
+
+
     getActiveHosts(){
 
-        //todo marek? get active hosts
+        const parts = ip.mask('192.168.88.19', '255.255.255.0').split(".")
+        const network = parts[0] + "." + parts[1] + "." +  parts[2] + "."
+        const hosts = _.range(1,255).reduce( (table, val) => {
+            return [...table, network + val]
+        },[])
 
-        // let hosts = []
-
-        // $.post('http://localhost:3000/hosts', {host: {scann_type: 'getActiveHosts'}}, (result) => {
-        //     hosts = result
-        // })
-
+        //todo whole range not only few selected
         return ['192.168.88.6','192.168.88.14']
-
-        // return ['192.168.88.19']
     }
 
     performSimpleScann (){
@@ -101,7 +121,7 @@ class FirstTab extends Component {
             <div>
                 <RaisedButton label="Simple Scann"
                               primary={true}
-                              onTouchTap={() => { this.performSimpleScann() }}
+                              onTouchTap={() => { this.getActiveHosts() }}
                 />
                 <hr/>
                 {/*<ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>*/}
