@@ -1,17 +1,11 @@
 import React, { Component } from 'react'
-
 import HostForm from './forms/HostForm'
-
 import DetectedHosts from './scann/DetectedHosts';
-
 import ProgressBar from './forms/progressBar'
-
 import Graph from '../libs/index'
+import { LineChart, PieChart } from 'react-chartkick';
 
 import MyMuiDataTable from './forms/MuiDataTable'
-
-
-
 
 class FirstTab extends Component {
 
@@ -26,12 +20,9 @@ class FirstTab extends Component {
             hostTable: [],
             scannAmount: 0
         }
-
-
     }
 
     addHostToTable (host) {
-        // this.hostTable.push("llala")
 
         const tablica  = this.state.hostTable
 
@@ -59,8 +50,6 @@ class FirstTab extends Component {
         console.log("delete -> " + index)
     }
 
-
-
     render () {
 
         // todo delete button
@@ -72,16 +61,11 @@ class FirstTab extends Component {
         // const hostNodes = this.state.hostTable.map( (host, index) => {
         //     return {id: index, label: host.IP}
         //     })
-        //
+
         // const hostEdges = this.state.hostTable.map( (host, index) => {
         //     return index !== 0 ? {from: 0, to: index} : {}
         // })
-        //
-        //
-        //
-        // console.log(hostNodes)
-        //
-        //
+
         // var data = {
         //     nodes: hostNodes,
         //     edges: hostEdges
@@ -91,15 +75,15 @@ class FirstTab extends Component {
         return (
             <div>
                 <HostForm addHostToTable = {this.addHostToTable} setScannAmount = {this.setScannAmount}/>
-                {/*<ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>*/}
+                <ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>
                 {/*<Graph graph={data}/>*/}
+                {/*<LineChart data={{"2013-02-10 00:00:00 -0800": 11, "2013-02-11 00:00:00 -0800": 6}} />*/}
                 <hr/>
                 {/*<MyMuiDataTable hostTable = {this.state.hostTable}/>*/}
                 <DetectedHosts hostTable = {this.state.hostTable} deleteHost = {this.deleteHost} />
             </div>
         )
     }
-
 }
 
 export default FirstTab

@@ -1,72 +1,70 @@
-var vis = require('vis');
-var React = require('react');
-var uuid = require('uuid');
+import {default as React, Component} from 'react';
+const vis = require('vis');
+const uuid = require('uuid');
 
-var Graph = React.createClass({
-    getDefaultProps: function () {
-        return {
-            graph: {},
-            identifier:uuid.v4(),
-            style:{width:"640px",height:"480px"}
+class Graph extends Component {
+    constructor(props) {
+        super(props);
+        const {identifier} = this.props;
+        this.updateGraph = this.updateGraph.bind(this);
+        this.state = {
+            hierarchicalLayout: true,
+            identifier : identifier !== undefined ? identifier : uuid.v4()
         };
-    },
-
-    getInitialState:function(){
-        return {
-            hierarchicalLayout:true
-        };
-    },
-
-    render: function() {
-        return React.createElement("div", {onDoubleClick: this.changeMode, id: this.props.identifier, style: this.props.style}, this.props.identifier);
-    },
-
-    changeMode:function(event) {
-        this.setState({hierarchicalLayout: !this.state.hierarchicalLayout});
-        this.updateGraph();
-    },
-
-    componentDidMount: function (){
-        this.updateGraph();
-    },
-
-    componentDidUpdate: function (){
-        this.updateGraph();
-    },
-
-    updateGraph:function(){
-        // Container
-        var container = document.getElementById(this.props.identifier);
-
-        // Options
-        var options = {
-            stabilize: false,
-            smoothCurves: false,
-            edges: {
-                color: '#000000',
-                width: 0.5,
-                arrowScaleFactor:0.5,
-                style:"arrow"
-            }
-
-        };
-        if (this.state.hierarchicalLayout) {
-            options.hierarchicalLayout = {
-                enabled: true,
-                direction: "UD",
-                levelSeparation:100,
-                nodeSpacing:1
-            };
-        } else {
-            options.hierarchicalLayout = {
-                enabled: false
-            };
-        }
-
-        var network = new vis.Network(container, this.props.graph, options);
     }
 
+    componentDidMount() {
+        this.updateGraph();
+    }
 
+    componentDidUpdate() {
+        this.updateGraph();
+    }
 
-});
-module.exports = Graph;
+    changeMode(event) {
+        this.setState({hierarchicalLayout: !this.state.hierarchicalLayout});
+        this.updateGraph();
+    }
+
+    updateGraph() {
+        let container = document.getElementById(this.state.identifier);
+        let options = {
+            // stabilize: false,
+            // smoothCurves: false,
+            // edges: {
+            //     color: '#000000',
+            //     width: 0.5,
+            //     arrowScaleFactor: 0.5,
+            //     style: 'arrow'
+            // }
+        };
+
+        // if (this.state.hierarchicalLayout) {
+        //     options.hierarchicalLayout = {
+        //         enabled: true,
+        //         direction: 'UD',
+        //         levelSeparation: 100,
+        //         nodeSpacing: 1
+        //     };
+        // } else {
+        //     options.hierarchicalLayout = {
+        //         enabled: false
+        //     };
+        // }
+
+        new vis.Network(container, this.props.graph, options);
+    }
+
+    render() {
+        const {identifier} = this.state;
+        const {style} = this.props;
+        return React.createElement('div', {onDoubleClick: this.changeMode.bind(this), id: identifier, style}, identifier);
+    }
+}
+
+Graph.defaultProps = {
+    graph: {},
+    style: { height: '480px'}
+};
+
+export default Graph;

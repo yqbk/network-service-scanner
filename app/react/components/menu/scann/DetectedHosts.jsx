@@ -14,13 +14,13 @@ class DetectedHosts extends Component {
     constructor () {
         super()
 
+        this.filterDownHosts = this.filterDownHosts.bind(this)
+        this.filterFilteredHosts = this.filterFilteredHosts.bind(this)
+
         this.state = {
             filterDown: false,
             filterFiltered: false
         }
-
-        this.filterDownHosts = this.filterDownHosts.bind(this)
-        this.filterFilteredHosts = this.filterFilteredHosts.bind(this)
     }
 
     filterDownHosts (){
@@ -31,16 +31,20 @@ class DetectedHosts extends Component {
         this.setState({filterFiltered: !this.state.filterFiltered})
     }
 
+
+    // todo unfiltered and others
     filterTable(table)
     {
         const filtered = table.reduce( (newTable, element) => {
-
-            const reducedDown =  (element.status === 'up' || element.status === 'filtered' ) ? [...newTable, element] : (this.state.filterDown === (element.status === 'down')) ? newTable : [...newTable, element]
+            const reducedDown =  (element.status === 'up' || element.status === 'filtered' ) ?
+                [...newTable, element] :
+                (this.state.filterDown === (element.status === 'down')) ? newTable : [...newTable, element]
 
             return reducedDown.reduce( (newTable, element) => {
-                return  (element.status === 'up' || element.status === 'down' ) ? [...newTable, element] : (this.state.filterFiltered === (element.status === 'filtered')) ? newTable : [...newTable, element]
+                return  (element.status === 'up' || element.status === 'down' ) ?
+                    [...newTable, element] :
+                    (this.state.filterFiltered === (element.status === 'filtered')) ? newTable : [...newTable, element]
             }, [])
-
         }, [])
 
         return filtered
@@ -48,15 +52,11 @@ class DetectedHosts extends Component {
 
     render () {
 
-
         const hostTable = this.filterTable( this.props.hostTable)
-
 
         return (
             <div>
-
                 <FilterToogle filterDownHosts={this.filterDownHosts} filterFilteredHosts={this.filterFilteredHosts}/>
-
 
                 <Table>
                     <TableHeader displaySelectAll={false}
@@ -67,8 +67,8 @@ class DetectedHosts extends Component {
                             <TableHeaderColumn>Status</TableHeaderColumn>
                             <TableHeaderColumn>Time</TableHeaderColumn>
                             <TableHeaderColumn>Method</TableHeaderColumn>
-                            {/*<TableHeaderColumn>Service</TableHeaderColumn>*/}
-                            <TableHeaderColumn>Actions</TableHeaderColumn>
+                            <TableHeaderColumn>Service</TableHeaderColumn>
+                            {/*<TableHeaderColumn>Actions</TableHeaderColumn>*/}
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
@@ -80,17 +80,17 @@ class DetectedHosts extends Component {
                                 <TableRowColumn>{host.status}</TableRowColumn>
                                 <TableRowColumn>{host.scann_time}</TableRowColumn>
                                 <TableRowColumn>{host.scann_type}</TableRowColumn>
-                                {/*<TableRowColumn>{host.service}</TableRowColumn>*/}
-                                <TableRowColumn>
+                                <TableRowColumn>{host.service}</TableRowColumn>
+                                {/*<TableRowColumn>*/}
+                                    {/*<FlatButton label="Save"*/}
+                                                {/*secondary={true}*/}
+                                                {/*onTouchTap={() => { alert('save'); }}*/}
+                                    {/*/>*/}
                                     {/*<RaisedButton label="Delete"*/}
                                                   {/*primary={true}*/}
-                                                  {/*onTouchTap={console.log("lala")}*/}
+                                                  {/*onTouchTap={() => { alert('delete'); }}*/}
                                     {/*/>*/}
-                                    {/*<FlatButton label="Save"*/}
-                                                  {/*secondary={true}*/}
-                                                  {/*onTouchTap={console.log("ok")}*/}
-                                    {/*/>*/}
-                                </TableRowColumn>
+                                {/*</TableRowColumn>*/}
                             </TableRow>
                         ) : null }
 
