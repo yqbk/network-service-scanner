@@ -111,7 +111,7 @@ export default class Main extends React.Component {
                         {/*<ScannHistory hosts={this.props.data}/>*/}
                     </div>
                 </Tab>
-                <Tab label="Single Scann" >
+                <Tab label="Active Hosts" >
                     <div>
                         <h2>Scann single host</h2>
                         <p>
@@ -120,7 +120,7 @@ export default class Main extends React.Component {
                         <SimpleScann />
                     </div>
                 </Tab>
-                <Tab label="ScannHistory" >
+                <Tab label="Scann History" >
                     <div>
                         <h2>Scann History</h2>
                         <p>
@@ -129,6 +129,15 @@ export default class Main extends React.Component {
                         <ScannHistory hosts={this.state.hosts}/>
                     </div>
                 </Tab>
+                <Tab label="About" >
+                    <div>
+                        <h2>About page</h2>
+                        <p>
+                            This is service scanner
+                        </p>
+                    </div>
+                </Tab>
+
             </Tabs>
         </MuiThemeProvider>
         );

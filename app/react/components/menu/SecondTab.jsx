@@ -39,7 +39,7 @@ class SecondTab extends Component {
 
     }
 
-    // todo marek ???
+    // todo marek ??? props not updating :((
     componentWillReceiveProps(nextProps) {
         // You don't have to do this check first, but it can help prevent an unneeded render
         if (nextProps.hosts !== this.state.hostTable) {

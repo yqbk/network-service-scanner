@@ -34,6 +34,8 @@ gem 'react_webpack_rails'
 
 gem 'packetfu'
 
+gem "rails-erd"
+
 gem 'net-telnet'
 
 gem 'net-ping'

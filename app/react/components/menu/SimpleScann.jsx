@@ -58,14 +58,16 @@ class FirstTab extends Component {
 
     getActiveHosts(){
 
-        const parts = ip.mask('192.168.88.19', '255.255.255.0').split(".")
+        const parts = ip.mask('192.168.0.1', '255.255.255.0').split(".")
         const network = parts[0] + "." + parts[1] + "." +  parts[2] + "."
-        const hosts = _.range(1,255).reduce( (table, val) => {
+        const hosts = _.range(1,54).reduce( (table, val) => {
             return [...table, network + val]
         },[])
 
         //todo whole range not only few selected
-        return ['192.168.88.6','192.168.88.14']
+        // return ['192.168.88.6','192.168.88.14']
+        return hosts
+        // return ['192.168.0.52']
     }
 
     performSimpleScann (){
@@ -83,18 +85,20 @@ class FirstTab extends Component {
 
         hosts.forEach( (host) =>
         {
-            tcp_ports.forEach( (port) =>
-            {
-                $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'ack'}}, (resultAck) => {
-                    resultAck.status == 'filtered' ? null : $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'syn'}}, (resultSyn) => {
-                        resultSyn.status != 'down' ? this.addHostToTable(resultSyn) :
-                            // $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'fin'}}, (resultFin) => {
-                            // resultFin.status != 'down' ? this.addHostToTable(resultFin):
-                                null
-                        // })
-                    })
+            // tcp_ports.forEach( (port) =>
+            // {
+
+                $.post('http://localhost:3000/hosts', {host: {IP: host, port: 22, scann_type: 'ping'}}, (result) => {
+                    result.status == 'up' ? this.addHostToTable(result) : null
+                    // resultAck.status == 'filtered' ? null : $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'syn'}}, (resultSyn) => {
+                    //     resultSyn.status != 'down' ? this.addHostToTable(resultSyn) :
+                    //         // $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'fin'}}, (resultFin) => {
+                    //         // resultFin.status != 'down' ? this.addHostToTable(resultFin):
+                    //             null
+                    //     // })
+                    // })
                 })
-            })
+            // })
         })
     }
 
@@ -121,7 +125,7 @@ class FirstTab extends Component {
             <div>
                 <RaisedButton label="Simple Scann"
                               primary={true}
-                              onTouchTap={() => { this.getActiveHosts() }}
+                              onTouchTap={() => { this.performSimpleScann() }}
                 />
                 <hr/>
                 {/*<ProgressBar scannAmount = {this.state.scannAmount} hostTableLenght = {this.state.hostTable.length}/>*/}
