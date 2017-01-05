@@ -86,7 +86,7 @@ class HostsController < ApplicationController
       #
       # response = host.cmd('')
 
-    rescue Net::ReadTimeout, Errno::ECONNREFUSED, Net::OpenTimeout
+    rescue Net::ReadTimeout, Errno::ECONNREFUSED, Net::OpenTimeout, Errno::ECONNRESET
       service = '-'
     end
 
