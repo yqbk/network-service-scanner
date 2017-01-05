@@ -25,73 +25,27 @@ Features:
 ![Submissions](/app/assets/images/screenshot3.png)
 
 
+## Requirements
+
+* npm version 4.0.3
+* rails version 5.0
+* ruby version 2.3.1
+
+
 ## Installation
 
-### The Composer Way (preferred)
-
-Install the plugin via [Composer](https://getcomposer.org/)
+1. Install gems:
 ```
-composer require anttiviljami/wp-libre-form
+bundle install
 ```
-
-Activate the plugin
-```
-wp plugin activate wp-libre-form
-
-
-
-
-== README
-
-1. Install gem:
-$ bundle install
 
 2. Establish the node packages (may take a few moments)
 $ npm install
 
-3. Make sure you have webpack installed globally:
-$ npm install webpack -g
+3. Start rails server (need root privileges)
+```
+sudo rails -s 3000 
+```
 
-4. Generate react_bundle.js file for first time:
-$ webpack
-
-5a. keep webpack running in watch mode, it will recompile any changes.
-$ npm start # it's a shorthand for webpack -w --config webpack/dev.config.js
-
-5b. run webpack with hot reload config
-$ npm run start-hot-dev
-
-Porduction:
-Run webpack in production mode before compiling assets using script:
+4. Build assets
 $ npm run build
-or manually:
-$ webpack -p --config YOUR_CONFIG
-
-
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
