@@ -38,11 +38,8 @@ class FirstTab extends Component {
     }
 
     localIP(callback){
-
-        //todo marek callback???
-
         var myIp = 0
-        window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;   //compatibility for firefox and chrome
+        window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
         var pc = new RTCPeerConnection({iceServers:[]}), noop = function(){};
         pc.createDataChannel("");    //create a bogus data channel
         pc.createOffer(pc.setLocalDescription.bind(pc), noop);    // create offer and set local description
@@ -52,9 +49,7 @@ class FirstTab extends Component {
             if(callback) callback(IP);
             pc.onicecandidate = noop;
         };
-
     }
-
 
     getActiveHosts(){
 

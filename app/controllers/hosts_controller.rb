@@ -1,6 +1,5 @@
 require_relative '../../app/controllers/network/scanner'
 require_relative '../../app/controllers/network/simple_scann'
-require_relative '../../app/controllers/network/scanner_utils'
 
 require 'net/ping'
 require 'socket'
@@ -9,22 +8,9 @@ require 'net/telnet'
 class HostsController < ApplicationController
 
   # todo OS detection
-  # todo Implement full scann of the network with multiple methods , nmap -sP
-  # todo Navbar in the top of page
-  # todo refresh chartkick on change or add generate chart button
-  # todo hosts map with d3.js
-  # todo refactor scanner to implement inheritance
-
-  # todo po kolei jakie skany na jakie porty jak w nmap
-
-#   todo telnet udp i ftp
-#   todo node diagram i speed chart
-#   todo button fast scann on second tab
-#   todo problemy w projekcie - dobranie parametrów / kompromis miedzy wydajnoscia a skutecznoscai
-#   todo wątki
-
-  #todo ack nie wypisuje
-
+  # todo add chartkick
+  # todo adjust detected hosts map to be more flexible
+  # todo implement multiple threads for scanns to make app faster
 
   @syn_scanner
   @ack_scanner
@@ -69,23 +55,6 @@ class HostsController < ApplicationController
           end
         end
 
-
-
-      # host = Net::Telnet::new(
-      #     "Host"       => ip,  # default: "localhost"
-      #     "Port"       => port,           # default: 23
-      #     "Binmode"    => false,        # default: false
-      #     "Output_log" => "output_log", # default: nil (no output)
-      #     "Prompt"     => /[$%#>] \z/n, # default: /[$%#>] \z/n
-      #     "Telnetmode" => true,         # default: true
-      #     "Timeout"    => 1,           # default: 10
-      #     # if ignore timeout then set "Timeout" to false.
-      #     "Waittime"   => 0            # default: 0
-      # # proxy is Net::ScannerUtils or IO object
-      # )
-      #
-      # response = host.cmd('')
-
     rescue Net::ReadTimeout, Errno::ECONNREFUSED, Net::OpenTimeout, Errno::ECONNRESET
       service = '-'
     end
@@ -104,9 +73,7 @@ class HostsController < ApplicationController
     end
 
     puts  response
-
     service
-
   end
 
 
@@ -207,7 +174,7 @@ class HostsController < ApplicationController
       }
     elsif scann_type == 'null'
       scann_time = Benchmark.realtime {
-        # status = scanner.tcp_null_scan(host_addr, port_nr)
+        # todo null scann
       }
     elsif scann_type == 'ping'
       scann_time = Benchmark.realtime {

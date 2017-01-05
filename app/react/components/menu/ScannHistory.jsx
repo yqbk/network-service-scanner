@@ -29,7 +29,6 @@ const ScannHistory = (props) => {
                         <td>{host.scann_type}</td>
                         <td>{host.service}</td>
                         <td>
-                            {/*<a className="btn btn-info">Detect service</a>*/}
                             <a className="btn btn-danger">Delete</a>
                         </td>
                     </tr>

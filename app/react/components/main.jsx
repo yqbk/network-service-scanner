@@ -126,7 +126,7 @@ export default class Main extends React.Component {
                     <div>
                         <h2>About page</h2>
                         <p>
-                            This is service scanner.
+                            This is the Network Service Scanner created by Jakub Syrek as a part of his Bachelor Thesis at the AGH University of Science and Technology.
                         </p>
                     </div>
                 </Tab>

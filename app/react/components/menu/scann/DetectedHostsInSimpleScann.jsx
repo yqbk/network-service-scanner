@@ -66,7 +66,6 @@ class DetectedHosts extends Component {
                             <TableHeaderColumn>Status</TableHeaderColumn>
                             <TableHeaderColumn>Time</TableHeaderColumn>
                             <TableHeaderColumn>Service</TableHeaderColumn>
-                            {/*<TableHeaderColumn>Actions</TableHeaderColumn>*/}
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>

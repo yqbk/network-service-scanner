@@ -68,7 +68,6 @@ class DetectedHosts extends Component {
                             <TableHeaderColumn>Time</TableHeaderColumn>
                             <TableHeaderColumn>Method</TableHeaderColumn>
                             <TableHeaderColumn>Service</TableHeaderColumn>
-                            {/*<TableHeaderColumn>Actions</TableHeaderColumn>*/}
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
@@ -81,16 +80,6 @@ class DetectedHosts extends Component {
                                 <TableRowColumn>{host.scann_time}</TableRowColumn>
                                 <TableRowColumn>{host.scann_type}</TableRowColumn>
                                 <TableRowColumn>{host.service}</TableRowColumn>
-                                {/*<TableRowColumn>*/}
-                                    {/*<FlatButton label="Save"*/}
-                                                {/*secondary={true}*/}
-                                                {/*onTouchTap={() => { alert('save'); }}*/}
-                                    {/*/>*/}
-                                    {/*<RaisedButton label="Delete"*/}
-                                                  {/*primary={true}*/}
-                                                  {/*onTouchTap={() => { alert('delete'); }}*/}
-                                    {/*/>*/}
-                                {/*</TableRowColumn>*/}
                             </TableRow>
                         ) : null }
 
