@@ -64,10 +64,7 @@ class FirstTab extends Component {
             return [...table, network + val]
         },[])
 
-        //todo whole range not only few selected
-        // return ['192.168.88.6','192.168.88.14']
         return hosts
-        // return ['192.168.0.1','192.168.0.9','192.168.0.11','192.168.0.27','192.168.0.52','192.168.0.6']
     }
 
     performSimpleScann (){
@@ -79,26 +76,11 @@ class FirstTab extends Component {
         this.setScannAmount(tcp_ports.length * hosts.length)
         console.log(this.state.scannAmount)
 
-        // todo marek render after finished not in loop execution
-        // todo add udp scann to simple scann?
-        //todo check with fin scann one more time?
-
         hosts.forEach( (host) =>
         {
-            // tcp_ports.forEach( (port) =>
-            // {
-
-                $.post('http://localhost:3000/hosts', {host: {IP: host, port: 22, scann_type: 'ping'}}, (result) => {
-                    result.status == 'up' ? this.addHostToTable(result) : null
-                    // resultAck.status == 'filtered' ? null : $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'syn'}}, (resultSyn) => {
-                    //     resultSyn.status != 'down' ? this.addHostToTable(resultSyn) :
-                    //         // $.post('http://localhost:3000/hosts', {host: {IP: host, port: port, scann_type: 'fin'}}, (resultFin) => {
-                    //         // resultFin.status != 'down' ? this.addHostToTable(resultFin):
-                    //             null
-                    //     // })
-                    // })
-                })
-            // })
+            $.post('http://localhost:3000/hosts', {host: {IP: host, port: 22, scann_type: 'ping'}}, (result) => {
+                result.status == 'up' ? this.addHostToTable(result) : null
+            })
         })
     }
 

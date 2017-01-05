@@ -34,9 +34,7 @@ const muiTheme = getMuiTheme({
         alternateTextColor: white,
         canvasColor: white,
         borderColor: grey300,
-        // disabledColor: fade(darkBlack, 0.3),
         pickerHeaderColor: orange500,
-        // clockCircleColor: fade(darkBlack, 0.07),
         shadowColor: fullBlack,
     },
     appBar: {
@@ -58,12 +56,8 @@ export default class Main extends React.Component {
         }
     }
 
-
-
     componentWillReceiveProps(nextProps) {
-        // You don't have to do this check first, but it can help prevent an unneeded render
         if (nextProps.data !== this.state.hosts) {
-            console.log("\n\nzmiana w main!!\n\n")
             this.setState({ hosts: nextProps.data });
         }
     }
@@ -108,14 +102,13 @@ export default class Main extends React.Component {
                             Scann range of adresses or your current network to detect hosts, open ports and services running on them.
                         </p>
                         <FirstTab />
-                        {/*<ScannHistory hosts={this.props.data}/>*/}
                     </div>
                 </Tab>
                 <Tab label="Active Hosts" >
                     <div>
-                        <h2>Scann single host</h2>
+                        <h2>Detect active hosts</h2>
                         <p>
-                            Choose parameters to perform single scann on host or compare results of different scanning methods.
+                            Detect active hosts in your current network.
                         </p>
                         <SimpleScann />
                     </div>
@@ -124,7 +117,7 @@ export default class Main extends React.Component {
                     <div>
                         <h2>Scann History</h2>
                         <p>
-                            History of detected hosts
+                            History of detected hosts.
                         </p>
                         <ScannHistory hosts={this.state.hosts}/>
                     </div>
@@ -133,7 +126,7 @@ export default class Main extends React.Component {
                     <div>
                         <h2>About page</h2>
                         <p>
-                            This is service scanner
+                            This is service scanner.
                         </p>
                     </div>
                 </Tab>

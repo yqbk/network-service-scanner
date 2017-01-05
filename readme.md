@@ -1,6 +1,4 @@
 # Network Service Scanner
-[![npm version](https://img.shields.io/npm/dm/localeval.svg)](  )
-
 
 Web application for scanning ports and network services written in Ruby and React.
 
@@ -40,7 +38,9 @@ bundle install
 ```
 
 2. Establish the node packages (may take a few moments)
-$ npm install
+```
+npm install
+```
 
 3. Start rails server (need root privileges)
 ```
@@ -48,4 +48,11 @@ sudo rails -s 3000
 ```
 
 4. Build assets
-$ npm run build
+```
+npm run build
+```
+
+5. Open application in your web browser
+```
+http://localhost:3000/
+```
