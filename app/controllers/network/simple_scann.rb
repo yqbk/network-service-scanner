@@ -2,6 +2,8 @@ require 'packetfu'
 
 class SimpleScann
 
+  # todo Implement scann of most typical ports, both tcp and udp
+
   private
 
 
@@ -88,7 +90,6 @@ class SimpleScann
 
   end
 
-  # todo repetition of ping method
   def ping(host)
     check = Net::Ping::External.new(host)
     if !check.ping?
@@ -125,7 +126,6 @@ class SimpleScann
         if scannTCP(ip, port)
           host = Host.new(:scan_id => '1', :IP => ip, :port => port, :status => 'up', :scann_type => 'tcp', :scann_time => 1, :service => " ")
           push_host(host)
-          # todo render host on each success
           # @hosts.push(Host.new(:scan_id => '1', :IP => ip, :port => port, :status => 'up', :scann_type => 'tcp', :scann_time => 1, :service => " "))
           # @open_tcp_ports.push(port)
         end

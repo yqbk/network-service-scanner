@@ -63,10 +63,8 @@ class DetectedHosts extends Component {
                                  adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn>IP</TableHeaderColumn>
-                            <TableHeaderColumn>Port</TableHeaderColumn>
                             <TableHeaderColumn>Status</TableHeaderColumn>
                             <TableHeaderColumn>Time</TableHeaderColumn>
-                            <TableHeaderColumn>Method</TableHeaderColumn>
                             <TableHeaderColumn>Service</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
@@ -75,10 +73,8 @@ class DetectedHosts extends Component {
                         {hostTable ? hostTable.map((host, index) =>
                             <TableRow key={`TableRow-${index}`}>
                                 <TableRowColumn>{host.IP}</TableRowColumn>
-                                <TableRowColumn>{host.port}</TableRowColumn>
                                 <TableRowColumn>{host.status}</TableRowColumn>
                                 <TableRowColumn>{host.scann_time}</TableRowColumn>
-                                <TableRowColumn>{host.scann_type}</TableRowColumn>
                                 <TableRowColumn>{host.service}</TableRowColumn>
                             </TableRow>
                         ) : null }

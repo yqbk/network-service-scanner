@@ -22,13 +22,8 @@ export default class ProgressBar extends React.Component {
         const scannAmount = this.props.scannAmount
 
         let progressValue = hostTableLenght === 0 ? 0 : (hostTableLenght / scannAmount) * 100
-
         progressValue = Math.round(progressValue)
-
-        // console.log("progress" + progressValue + " | " + hostTableLenght + "/" + scannAmount)
-
         progressValue === this.state.completed ? {} : this.setState({ completed: progressValue })
-
     }
 
     render() {
