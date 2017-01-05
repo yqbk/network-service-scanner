@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import DetectedHosts from './scann/DetectedHosts';
+import DetectedHosts from './scann/DetectedHostsInSimpleScann';
 import ProgressBar from './forms/progressBar'
 import Graph from '../libs/index'
 import RaisedButton from 'material-ui/RaisedButton';
@@ -60,14 +60,14 @@ class FirstTab extends Component {
 
         const parts = ip.mask('192.168.0.1', '255.255.255.0').split(".")
         const network = parts[0] + "." + parts[1] + "." +  parts[2] + "."
-        const hosts = _.range(1,54).reduce( (table, val) => {
+        const hosts = _.range(1,254).reduce( (table, val) => {
             return [...table, network + val]
         },[])
 
         //todo whole range not only few selected
         // return ['192.168.88.6','192.168.88.14']
         return hosts
-        // return ['192.168.0.52']
+        // return ['192.168.0.1','192.168.0.9','192.168.0.11','192.168.0.27','192.168.0.52','192.168.0.6']
     }
 
     performSimpleScann (){
@@ -105,7 +105,7 @@ class FirstTab extends Component {
     render () {
 
         const hostNodes = this.state.hostTable.map( (host, index) => {
-            return {id: index, label: host.IP + " : " + host.port }
+            return {id: index, label: host.IP}
             })
 
         const hostEdges = this.state.hostTable.reduce( (result, host, index ) => {

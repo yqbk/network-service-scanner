@@ -10,17 +10,18 @@ Features:
 - Provide information about network services detected on ports
 - Display interactive network map
 - Get information about performed scans, like time, date and status
+- Filter results based on port state
 
 
 ## Screenshots
 
-### Editing a Form
+### Scann few hosts on port number 22
 ![Form edit](/app/assets/images/screenshot1.png)
 
-### Form displayed in the default Twentysixteen theme
+### Detect active hosts in the current network
 ![Submissions](/app/assets/images/screenshot2.png)
 
-### Submissions view
+### History of previous scans
 ![Submissions](/app/assets/images/screenshot3.png)
 
 
