@@ -124,10 +124,15 @@ export default class Main extends React.Component {
                 </Tab>
                 <Tab label="About" >
                     <div>
-                        <h2>About page</h2>
-                        <p>
-                            This is the Network Service Scanner created by Jakub Syrek as a part of his Bachelor Thesis at the AGH University of Science and Technology.
-                        </p>
+                        <h1>About page</h1>
+                        <h3>
+                            <p>
+                                This is the Network Service Scanner created by Jakub Syrek as a part of his Bachelor Thesis at the AGH University of Science and Technology.
+                            </p>
+                            <p>
+                                More info at <a href="http://github.com/yqbk/network-service-scanner">my github page</a>.
+                            </p>
+                        </h3>
                     </div>
                 </Tab>
 

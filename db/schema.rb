@@ -11,24 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161128203544) do
+ActiveRecord::Schema.define(version: 20170106125903) do
 
   create_table "hosts", force: :cascade do |t|
     t.integer  "scan_id"
-    t.datetime "start"
-    t.datetime "end"
     t.string   "IP"
-    t.integer  "port_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string   "status"
     t.integer  "port"
     t.string   "scann_type"
-    t.string   "scann_time"
+    t.string   "status"
     t.string   "service"
+    t.string   "scann_time"
+    t.datetime "created_at", null: false
   end
-
-  add_index "hosts", ["port_id"], name: "index_hosts_on_port_id"
 
   create_table "records", force: :cascade do |t|
     t.string   "title"
