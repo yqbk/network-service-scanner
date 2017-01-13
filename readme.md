@@ -39,6 +39,11 @@ Features:
 bundle install
 ```
 
+* Setup database:
+```
+rake db:create db:migrate
+```
+
 * Establish the node packages (may take a few moments)
 ```
 npm install
